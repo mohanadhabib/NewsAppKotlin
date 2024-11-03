@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "184868239974",
+    "project_id": "foodapp-e82a3",
+    "storage_bucket": "foodapp-e82a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184868239974:android:12ffc68e892999a04bcba7",
+        "android_client_info": {
+          "package_name": "com.mohanad.newsappkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184868239974-vvsmoq76ugbajvun2siris97f54kuqd7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohanad.newsappkotlin",
+            "certificate_hash": "43822e4e6a4b7448412d305f30283500a704a955"
+          }
+        },
+        {
+          "client_id": "184868239974-bch8oejrjfq2a929ob54cr9397rlp5mc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsEB4mR28tn5CrS-h5OaxOi_-OSZ2LnLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184868239974-bch8oejrjfq2a929ob54cr9397rlp5mc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
