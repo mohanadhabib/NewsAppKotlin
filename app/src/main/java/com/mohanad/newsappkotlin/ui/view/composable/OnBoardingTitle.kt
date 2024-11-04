@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+// The main bold title text in onboarding screens
 @Composable
 fun OnBoardingTitle(text:String , modifier: Modifier){
     Text(

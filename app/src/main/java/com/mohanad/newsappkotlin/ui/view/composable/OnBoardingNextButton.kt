@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 
+// The next button in onboarding screens and signup and login buttons
 @Composable
 fun OnBoardingNextButton(text:String ,modifier: Modifier , onClick:()->Unit){
     Button(

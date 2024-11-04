@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// The back button in the onboarding screens
 @Composable
 fun OnBoardingBackButton(modifier: Modifier, onClick:()-> Unit){
     TextButton(

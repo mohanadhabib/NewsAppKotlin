@@ -46,7 +46,7 @@ import com.mohanad.newsappkotlin.ui.view.validation.passwordErrorText
 import com.mohanad.newsappkotlin.ui.view.validation.passwordValidation
 import com.mohanad.newsappkotlin.ui.viewmodel.SignUpViewModel
 
-
+// Signup Screen
 @Composable
 fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
     ConstraintLayout (
@@ -208,8 +208,8 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                 viewModel.signUp(
                     email = email,
                     password= password,
-                    onSuccess = {
-                        Toast.makeText(context,"Signup Successfully", Toast.LENGTH_LONG).show()
+                    onSuccess = { it ->
+                        Toast.makeText(context,"Signup Successfully!!", Toast.LENGTH_LONG).show()
                         val user = User(
                             userId = it.user!!.uid,
                             userEmail = email,
@@ -224,12 +224,18 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                                 }
                             },
                             onFailure = {
-                                Toast.makeText(context,"Signup Failed ,Try Again", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
+                            },
+                            onExceptionFound = {
+                                Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
                             }
                         )
                     },
                     onFailure = {
-                        Toast.makeText(context,"Couldn't Create User", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
+                    },
+                    onExceptionFound = {
+                        Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
                     }
                 )
             }

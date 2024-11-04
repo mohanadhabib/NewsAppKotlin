@@ -33,6 +33,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+// MyApp Theme
 @Composable
 fun NewsAppKotlinTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

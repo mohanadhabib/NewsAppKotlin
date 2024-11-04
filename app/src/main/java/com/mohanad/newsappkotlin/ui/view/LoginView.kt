@@ -47,6 +47,7 @@ import com.mohanad.newsappkotlin.ui.view.validation.passwordErrorText
 import com.mohanad.newsappkotlin.ui.view.validation.passwordValidation
 import com.mohanad.newsappkotlin.ui.viewmodel.LoginViewModel
 
+// Login Screen
 @Composable
 fun LoginView(viewModel: LoginViewModel,navController: NavHostController){
     ConstraintLayout (
@@ -230,7 +231,10 @@ fun LoginView(viewModel: LoginViewModel,navController: NavHostController){
                         }
                     },
                     onFailure = {
-                        Toast.makeText(context,"Login Failed ,Try Again", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
+                    },
+                    onExceptionFound = {
+                        Toast.makeText(context,it.localizedMessage,Toast.LENGTH_LONG).show()
                     }
                 )
             }

@@ -15,9 +15,11 @@ import com.mohanad.newsappkotlin.ui.view.SplashScreenView
 import com.mohanad.newsappkotlin.ui.viewmodel.LoginViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.SignUpViewModel
 
+// The app Navigation graph
 @Composable
 fun NavGraph(navController: NavHostController){
     NavHost(navController = navController, startDestination = NavRoute.SplashScreen.route){
+        // SplashScreen
         composable(route = NavRoute.SplashScreen.route){
             val signUpViewModel = viewModel(modelClass = SignUpViewModel::class)
             val loginViewModel = viewModel(modelClass = LoginViewModel::class)
@@ -28,27 +30,33 @@ fun NavGraph(navController: NavHostController){
                 loginViewModel = loginViewModel
                 )
         }
+        // OnboardingOneScreen
         composable(route = NavRoute.OnBoardingOne.route){
             OnBoardingOneView(navController = navController)
         }
+        // OnboardingTwoScreen
         composable(route = NavRoute.OnBoardingTwo.route){
             OnBoardingTwoView(navController = navController)
         }
+        // OnboardingThreeScreen
         composable(route = NavRoute.OnBoardingThree.route){
             OnBoardingThreeView(navController = navController)
         }
+        // LoginScreen
         composable(route = NavRoute.Login.route){
             val viewModel = viewModel (LoginViewModel::class)
             LoginView(
                 viewModel = viewModel,
                 navController = navController)
         }
+        // SignupScreen
         composable(route = NavRoute.SignUp.route){
             val viewModel = viewModel (SignUpViewModel::class)
             SignUpView(
                 viewModel = viewModel,
                 navController = navController)
         }
+        // HomeScreen
         composable(route = NavRoute.Home.route){
             HomeView()
         }

@@ -10,16 +10,21 @@ class LoginViewModel (application: Application): AndroidViewModel(application = 
 
     private val repository = LoginRepository(application.applicationContext)
 
+    // The Stored userId in repository
     val storedId: LiveData<String> = repository.storedId
 
-    fun login(email:String, password: String, onSuccess: (AuthResult)->Unit, onFailure: (Exception)->Unit){
+    // Login and authenticating user in repository
+    fun login(email:String, password: String, onSuccess: (AuthResult)->Unit, onFailure: (Exception)->Unit,onExceptionFound:(Exception)->Unit){
         repository.login(
             email = email,
             password = password,
             onSuccess = onSuccess,
-            onFailure = onFailure
+            onFailure = onFailure,
+            onExceptionFound = onExceptionFound
         )
     }
+
+    // Storing userId in repository
     fun storeId(id:String){
         repository.storeId(id)
     }

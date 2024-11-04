@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainRedError
 
+// The label that shown above the text field to indicate the type of data to enter
 @Composable
 fun TextFieldLabel(text:String , modifier: Modifier){
     Row (

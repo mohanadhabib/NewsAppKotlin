@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+// The title text in signup and login screens
 @Composable
 fun WelcomeText(text:String ,color:Color ,modifier: Modifier){
     Text(

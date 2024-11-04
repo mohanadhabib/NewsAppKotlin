@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 
+// The remember checkbox that save the user info when checked
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RememberMeRow(checked:Boolean, modifier: Modifier, onCheckedChange:(Boolean)->Unit ){

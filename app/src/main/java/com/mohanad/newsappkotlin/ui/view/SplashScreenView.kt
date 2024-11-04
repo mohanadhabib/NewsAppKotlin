@@ -18,6 +18,7 @@ import com.mohanad.newsappkotlin.ui.viewmodel.LoginViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.SignUpViewModel
 import kotlinx.coroutines.delay
 
+// Splash Screen
 @Composable
 fun SplashScreenView(navController: NavHostController , signUpViewModel: SignUpViewModel , loginViewModel: LoginViewModel) {
 

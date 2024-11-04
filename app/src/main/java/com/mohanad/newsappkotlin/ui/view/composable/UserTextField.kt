@@ -24,6 +24,7 @@ import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainRedContainerError
 import com.mohanad.newsappkotlin.ui.theme.mainRedError
 
+// The main text field that can receive all user data like: email , password , etc.
 @Composable
 fun UserTextField(value: String,errorText: String,isError: Boolean,keyboardType: KeyboardType,action: ImeAction,onValueChange:(String)->Unit,modifier: Modifier,visualTransformation: VisualTransformation,trailing: @Composable (()->Unit)?){
     Column (

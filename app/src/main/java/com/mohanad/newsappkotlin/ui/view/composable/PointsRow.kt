@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.mohanad.newsappkotlin.R
 
-
+// The row that indicate the current onboarding screen
 @Composable
 fun PointsRow(firstColor: Color, secondColor:Color, thirdColor: Color, modifier: Modifier){
     Row (

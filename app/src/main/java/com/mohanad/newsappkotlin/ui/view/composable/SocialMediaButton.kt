@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 import com.mohanad.newsappkotlin.ui.theme.mainGreyContainer
 
+// The Social media authentication button like facebook and google sign in
 @Composable
 fun SocialMediaButton(text:String , contentDescription: String , modifier: Modifier , onClick:()->Unit , painter: Painter){
     Button(

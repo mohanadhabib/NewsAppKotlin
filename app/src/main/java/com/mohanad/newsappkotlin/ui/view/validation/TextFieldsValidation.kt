@@ -1,9 +1,12 @@
 package com.mohanad.newsappkotlin.ui.view.validation
 
+// email error text shown under the email text field
 var emailErrorText = ""
 
+// password error text shown under the password text field
 var passwordErrorText = ""
 
+// email validation function
 fun emailValidation(email:String): Boolean{
 
     val isError = if(email.isEmpty()){
@@ -20,6 +23,7 @@ fun emailValidation(email:String): Boolean{
     return isError
 }
 
+// password validation function
 fun passwordValidation(password:String): Boolean{
 
     val isError = if(password.isEmpty()){

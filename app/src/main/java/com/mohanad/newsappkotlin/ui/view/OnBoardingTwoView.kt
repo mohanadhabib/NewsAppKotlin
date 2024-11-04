@@ -18,6 +18,7 @@ import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingText
 import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingTitle
 import com.mohanad.newsappkotlin.ui.view.composable.PointsRow
 
+// Onboarding two Screen
 @Composable
 fun OnBoardingTwoView(navController: NavHostController){
     ConstraintLayout (

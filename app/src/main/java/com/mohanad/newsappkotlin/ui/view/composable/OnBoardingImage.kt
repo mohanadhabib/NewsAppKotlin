@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 
+// The image in the onboarding screens
 @Composable
 fun OnBoardingImage(@DrawableRes id:Int, modifier: Modifier) {
     Image(
