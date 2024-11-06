@@ -144,6 +144,7 @@ fun LoginView(viewModel: LoginViewModel,navController: NavHostController){
                 email = it
                 isEmailError = emailValidation(email)
             },
+            placeholder = null,
             modifier = Modifier.constrainAs(emailTextField){
                 top.linkTo(emailLabel.bottom , margin = 10.dp)
                 start.linkTo(parent.start)
@@ -171,6 +172,7 @@ fun LoginView(viewModel: LoginViewModel,navController: NavHostController){
                 password = it
                 isPasswordError = passwordValidation(password)
             },
+            placeholder = null,
             modifier = Modifier.constrainAs(passwordTextField){
                 top.linkTo(passwordLabel.bottom , margin = 10.dp)
                 start.linkTo(parent.start)

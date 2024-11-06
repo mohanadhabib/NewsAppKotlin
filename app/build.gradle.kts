@@ -86,7 +86,8 @@ dependencies {
     // Gson Converter
     implementation(libs.converter.gson)
     // Coil
-    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.v250)
+    implementation(libs.coil.svg.v250)
     // Main Dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

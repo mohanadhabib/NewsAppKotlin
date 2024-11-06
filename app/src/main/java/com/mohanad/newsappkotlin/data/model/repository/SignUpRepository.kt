@@ -6,7 +6,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.mohanad.newsappkotlin.data.datasource.UserSharedPreferences
+import com.mohanad.newsappkotlin.data.datasource.sharedpreferences.UserSharedPreferences
 import com.mohanad.newsappkotlin.data.model.User
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
@@ -36,7 +36,7 @@ class SignUpRepository (private val context: Context){
         try {
             Firebase.firestore
                 .collection(FirebaseConstants.USER_COLLECTION)
-                .document(user.userId)
+                .document(user.userId ?: "")
                 .set(user)
                 .addOnSuccessListener{
                     onSuccess(it)

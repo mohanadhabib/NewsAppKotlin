@@ -16,4 +16,8 @@ sealed class NavRoute (val route:String){
     data object SignUp : NavRoute("sign up")
     // HomeScreen Route
     data object Home: NavRoute("home")
+    // SelectCountry Route
+    data object SelectCountry : NavRoute("select country")
+    // Topics Route
+    data object Topics : NavRoute("topics")
 }

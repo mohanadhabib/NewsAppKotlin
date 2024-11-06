@@ -1,4 +1,4 @@
-package com.mohanad.newsappkotlin.data.datasource
+package com.mohanad.newsappkotlin.data.datasource.sharedpreferences
 
 import android.content.Context
 import com.mohanad.newsappkotlin.util.SharedPreferencesConstants

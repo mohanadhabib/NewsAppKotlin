@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.mohanad.newsappkotlin.R
 import com.mohanad.newsappkotlin.data.model.User
+import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
@@ -134,6 +135,7 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                 email = it
                 isEmailError = emailValidation(email)
             },
+            placeholder = null,
             modifier = Modifier.constrainAs(emailTextField){
                 top.linkTo(emailLabel.bottom, margin = 10.dp)
                 start.linkTo(parent.start)
@@ -161,6 +163,7 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                 password = it
                 isPasswordError = passwordValidation(password)
             },
+            placeholder = null,
             modifier = Modifier.constrainAs(passwordTextField){
                 top.linkTo(passwordLabel.bottom , margin = 10.dp)
                 start.linkTo(parent.start)
@@ -213,14 +216,21 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                         val user = User(
                             userId = it.user!!.uid,
                             userEmail = email,
-                            password = password
+                            password = password,
+                            country = null,
+                            listOfTopics = null
                         )
                         viewModel.createUser(
                             user = user,
                             onSuccess = {
                                 Toast.makeText(context,"User Created Successfully", Toast.LENGTH_LONG).show()
                                 if(isChecked){
-                                    viewModel.storeId(user.userId)
+                                    viewModel.storeId(user.userId ?: "")
+                                }
+                                navController.navigate(NavRoute.SelectCountry.route){
+                                    popUpTo(NavRoute.SignUp.route){
+                                        inclusive = true
+                                    }
                                 }
                             },
                             onFailure = {
