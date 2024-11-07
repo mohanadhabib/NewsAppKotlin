@@ -6,6 +6,12 @@ var emailErrorText = ""
 // password error text shown under the password text field
 var passwordErrorText = ""
 
+// name error text shown under the name or full name text field
+var nameErrorText = ""
+
+// phone error text shown under the phone number text field
+var phoneErrorText = ""
+
 // email validation function
 fun emailValidation(email:String): Boolean{
 
@@ -32,6 +38,36 @@ fun passwordValidation(password:String): Boolean{
     }
     else if(password.length < 8){
         passwordErrorText = "Password is not strong, it must be more than 8 letters"
+        true
+    }
+    else{
+        false
+    }
+    return isError
+}
+
+// name validation function
+fun nameValidation(name:String): Boolean{
+
+    val isError = if(name.isEmpty()){
+        nameErrorText = "Your name is empty"
+        true
+    }
+    else{
+        false
+    }
+    return isError
+}
+
+// phone number validation function
+fun phoneValidation(phone:String): Boolean{
+
+    val isError = if(phone.isEmpty()){
+        phoneErrorText = "Phone is empty"
+        true
+    }
+    else if(!phone.contains("+")){
+        phoneErrorText = "Invalid phone format ,Phone must start with + and your country code"
         true
     }
     else{

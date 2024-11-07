@@ -1,12 +1,9 @@
 package com.mohanad.newsappkotlin.data.model.repository
 
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
+import com.mohanad.newsappkotlin.data.datasource.firebase.SelectCountryFirebase
 import com.mohanad.newsappkotlin.data.datasource.retrofit.CountriesApi
 import com.mohanad.newsappkotlin.data.datasource.retrofit.CountriesRetrofit
 import com.mohanad.newsappkotlin.data.model.Country
-import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class SelectCountryRepository {
 
@@ -36,19 +33,10 @@ class SelectCountryRepository {
 
     // Storing the country name into the user info in firestore
     fun storeUserCountry(countryName:String,onSuccess:(Void?) -> Unit,onFailure:(Exception)->Unit){
-        try {
-            Firebase.firestore.collection(FirebaseConstants.USER_COLLECTION)
-                .document(Firebase.auth.uid!!)
-                .update(
-                    mapOf(pair = "country" to countryName)
-                ).addOnSuccessListener {
-                    onSuccess(it)
-                }
-                .addOnFailureListener {
-                    onFailure(it)
-                }
-        }catch (e:Exception){
-            onFailure(e)
-        }
+        SelectCountryFirebase.storeUserCountry(
+            countryName = countryName,
+            onSuccess = onSuccess,
+            onFailure = onFailure
+        )
     }
 }

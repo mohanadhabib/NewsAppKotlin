@@ -14,10 +14,14 @@ sealed class NavRoute (val route:String){
     data object Login: NavRoute("login")
     // SignupScreen Route
     data object SignUp : NavRoute("sign up")
-    // HomeScreen Route
-    data object Home: NavRoute("home")
     // SelectCountry Route
     data object SelectCountry : NavRoute("select country")
+    // NewsSource Route
+    data object NewsSource : NavRoute("news source")
     // Topics Route
     data object Topics : NavRoute("topics")
+    // FillProfile route
+    data object FillProfile : NavRoute("fill profile")
+    // HomeScreen Route
+    data object Home: NavRoute("home")
 }

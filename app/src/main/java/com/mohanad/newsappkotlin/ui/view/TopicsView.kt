@@ -35,6 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.mohanad.newsappkotlin.R
+import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 import com.mohanad.newsappkotlin.ui.view.composable.BackArrow
@@ -43,6 +44,7 @@ import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.TopicsViewModel
 
+// Topics Screen
 @Composable
 fun TopicsView(viewModel: TopicsViewModel , navController: NavHostController){
     ConstraintLayout(
@@ -148,6 +150,7 @@ fun TopicsView(viewModel: TopicsViewModel , navController: NavHostController){
                 list = selectedTitles,
                 onSuccess = {
                     Toast.makeText(context,"Topics Saved Successfully",Toast.LENGTH_SHORT).show()
+                    navController.navigate(NavRoute.NewsSource.route)
                 },
                 onFailure = {
                     Toast.makeText(context ,"Cannot save topics, Try again",Toast.LENGTH_SHORT).show()

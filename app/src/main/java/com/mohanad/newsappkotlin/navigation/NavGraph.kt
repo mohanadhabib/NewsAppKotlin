@@ -5,16 +5,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mohanad.newsappkotlin.ui.view.FillProfileView
 import com.mohanad.newsappkotlin.ui.view.TopicsView
 import com.mohanad.newsappkotlin.ui.view.HomeView
 import com.mohanad.newsappkotlin.ui.view.LoginView
+import com.mohanad.newsappkotlin.ui.view.NewsSourceView
 import com.mohanad.newsappkotlin.ui.view.OnBoardingOneView
 import com.mohanad.newsappkotlin.ui.view.OnBoardingThreeView
 import com.mohanad.newsappkotlin.ui.view.OnBoardingTwoView
 import com.mohanad.newsappkotlin.ui.view.SelectCountryView
 import com.mohanad.newsappkotlin.ui.view.SignUpView
 import com.mohanad.newsappkotlin.ui.view.SplashScreenView
+import com.mohanad.newsappkotlin.ui.viewmodel.FillProfileViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.LoginViewModel
+import com.mohanad.newsappkotlin.ui.viewmodel.NewsSourceViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.SelectCountryViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.SignUpViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.TopicsViewModel
@@ -71,6 +75,20 @@ fun NavGraph(navController: NavHostController){
         composable(route = NavRoute.Topics.route){
             val viewModel = viewModel(TopicsViewModel::class)
             TopicsView(
+                viewModel = viewModel,
+                navController = navController)
+        }
+        // NewsSourceScreen
+        composable(route = NavRoute.NewsSource.route){
+            val viewModel = viewModel(NewsSourceViewModel::class)
+            NewsSourceView(
+                viewModel = viewModel,
+                navController = navController)
+        }
+        // FillProfileScreen
+        composable (route = NavRoute.FillProfile.route){
+            val viewModel = viewModel(FillProfileViewModel::class)
+            FillProfileView(
                 viewModel = viewModel,
                 navController = navController)
         }

@@ -53,7 +53,7 @@ import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.SelectCountryViewModel
 
-// SelectCountryScreen
+// SelectCountry Screen
 @Composable
 fun SelectCountryView(viewModel: SelectCountryViewModel,navController: NavController){
     ConstraintLayout(

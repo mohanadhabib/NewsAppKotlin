@@ -217,8 +217,6 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                             userId = it.user!!.uid,
                             userEmail = email,
                             password = password,
-                            country = null,
-                            listOfTopics = null
                         )
                         viewModel.createUser(
                             user = user,

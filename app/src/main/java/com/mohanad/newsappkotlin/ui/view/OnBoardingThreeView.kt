@@ -18,7 +18,7 @@ import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingText
 import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingTitle
 import com.mohanad.newsappkotlin.ui.view.composable.PointsRow
 
-// Onboarding three Screen
+// Onboarding Three Screen
 @Composable
 fun OnBoardingThreeView(navController: NavHostController){
 
