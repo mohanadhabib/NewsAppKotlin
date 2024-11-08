@@ -1,6 +1,9 @@
 package com.mohanad.newsappkotlin.ui.viewmodel
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.UploadTask
 import com.mohanad.newsappkotlin.data.model.repository.FillProfileRepository
@@ -8,6 +11,20 @@ import com.mohanad.newsappkotlin.data.model.repository.FillProfileRepository
 class FillProfileViewModel :ViewModel() {
 
     private val repository = FillProfileRepository ()
+
+    var imageUrl: Uri? by mutableStateOf(Uri.EMPTY)
+
+    var userNameTextField by mutableStateOf("")
+
+    var fullNameTextField by mutableStateOf("")
+
+    var phoneNumberTextField by mutableStateOf("")
+
+    var isNameError by mutableStateOf(false)
+
+    var isFullNameError by  mutableStateOf(false)
+
+    var isPhoneNumberError by  mutableStateOf(false)
 
     // store the user selected image into firebase storage
     fun storeUserImage(imageUrl: Uri, onSuccess :(UploadTask.TaskSnapshot?)-> Unit, onFailure:(Exception)->Unit ){

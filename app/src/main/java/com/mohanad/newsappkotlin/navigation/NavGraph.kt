@@ -94,7 +94,8 @@ fun NavGraph(navController: NavHostController){
         }
         // HomeScreen
         composable(route = NavRoute.Home.route){
-            HomeView()
+            HomeView(navController = navController)
         }
+
     }
 }

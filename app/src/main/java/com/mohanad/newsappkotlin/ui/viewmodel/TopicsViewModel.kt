@@ -1,5 +1,9 @@
 package com.mohanad.newsappkotlin.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +12,10 @@ import com.mohanad.newsappkotlin.data.model.repository.TopicsRepository
 class TopicsViewModel:ViewModel() {
 
     private val repository = TopicsRepository()
+
+    var searchTxt by mutableStateOf("")
+
+    val selectedTitles = mutableStateListOf<String>()
 
     // Get all available topics
     fun getAllTopics():LiveData<List<String>>{

@@ -26,6 +26,7 @@ fun OnBoardingTwoView(navController: NavHostController){
     ){
         val guideline = createGuidelineFromTop(0.6f)
         val guideline0 = createGuidelineFromTop(0.9f)
+
         val (image,txt1,txt2,txt3,txt4,dotsRow,button,back) = createRefs()
 
         OnBoardingImage(

@@ -21,10 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,15 +39,12 @@ import androidx.navigation.NavHostController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.mohanad.newsappkotlin.R
-import com.mohanad.newsappkotlin.data.datasource.retrofit.NewsSourceRetrofit
 import com.mohanad.newsappkotlin.data.model.NewsSource
 import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 import com.mohanad.newsappkotlin.ui.theme.mainGreyContainer
-import com.mohanad.newsappkotlin.ui.view.composable.BackArrow
-import com.mohanad.newsappkotlin.ui.view.composable.LabelText
-import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
+import com.mohanad.newsappkotlin.ui.view.composable.SetupScreensTemplate
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.NewsSourceViewModel
 
@@ -67,52 +60,57 @@ fun NewsSourceView(viewModel:NewsSourceViewModel ,navController:NavHostControlle
 
         val (backBtn,text,searchTextField,list,nextBtn) = createRefs()
 
-        var searchTxt by remember {
-            mutableStateOf("")
-        }
-
         val allNewsSource by viewModel.getNewsSource(
-            apiKey = NewsSourceRetrofit.API_KEY,
             onFailure = {Toast.makeText(context,"Cannot load news source",Toast.LENGTH_SHORT).show()}
         ).observeAsState()
 
         val searchedNewsSource by viewModel.getSearchedNewsSource(
-            title = searchTxt,
+            title = viewModel.searchTxt,
             allNewsList = allNewsSource?.results ?: emptyList()
         ).observeAsState()
 
         val newsSourceList = if(searchedNewsSource?.size == 0) allNewsSource?.results else searchedNewsSource
 
-        val selectedList = remember {
-            mutableStateListOf<String>()
-        }
-
-        BackArrow(
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier.constrainAs(backBtn){
+        SetupScreensTemplate(
+            navController = navController,
+            arrowModifier = Modifier.constrainAs(backBtn){
                 top.linkTo(parent.top, margin = 20.dp)
                 start.linkTo(parent.start)
-            })
-
-        LabelText(
-            text = "Choose your News Sources",
-            modifier = Modifier.constrainAs(text){
+            },
+            labelModifier = Modifier.constrainAs(text){
                 top.linkTo(backBtn.top)
                 bottom.linkTo(backBtn.bottom)
                 start.linkTo(backBtn.end)
                 end.linkTo(parent.end)
-            })
+            },
+            buttonModifier = Modifier.constrainAs(nextBtn){
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+            labelTxt = "Choose your News Sources"
+        ) {
+            viewModel.storeNewsSources(
+                list = viewModel.selectedList,
+                onSuccess = {
+                    Toast.makeText(context,"Sources saved successfully!!",Toast.LENGTH_SHORT).show()
+                    navController.navigate(NavRoute.FillProfile.route)
+                },
+                onFailure = {
+                    Toast.makeText(context,"Cannot store your selected news source",Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
 
         UserTextField(
-            value = searchTxt,
+            value = viewModel.searchTxt,
             errorText = "",
             isError = false,
             keyboardType = KeyboardType.Text,
             action = ImeAction.Search,
             onValueChange = {
-                searchTxt = it
+                viewModel.searchTxt = it
             },
             modifier = Modifier.constrainAs(searchTextField){
                 top.linkTo(backBtn.bottom, margin = 20.dp)
@@ -149,30 +147,10 @@ fun NewsSourceView(viewModel:NewsSourceViewModel ,navController:NavHostControlle
             items(newsSourceList ?: emptyList()){ item ->
                 NewsSourceItem(
                     newsSource = item,
-                    selectedList = selectedList) {
-                    selectedList.add(it)
+                    selectedList = viewModel.selectedList) {
+                    viewModel.selectedList.add(it)
                 }
             }
-        }
-
-        OnBoardingNextButton(
-            text = "Next",
-            modifier = Modifier.constrainAs(nextBtn){
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }) {
-            viewModel.storeNewsSources(
-                list = selectedList,
-                onSuccess = {
-                    Toast.makeText(context,"Sources saved successfully!!",Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoute.FillProfile.route)
-                },
-                onFailure = {
-                    Toast.makeText(context,"Cannot store your selected news source",Toast.LENGTH_SHORT).show()
-                }
-            )
         }
     }
 }

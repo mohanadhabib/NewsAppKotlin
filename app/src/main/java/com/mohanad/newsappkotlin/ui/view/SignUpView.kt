@@ -11,10 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -75,28 +71,6 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
 
         createHorizontalChain(googleBtn,facebookBtn, chainStyle = ChainStyle.SpreadInside)
 
-
-        var email by remember {
-            mutableStateOf("")
-        }
-        var password by remember {
-            mutableStateOf("")
-        }
-        var isChecked by remember {
-            mutableStateOf(false)
-        }
-        var isEmailError by remember {
-            mutableStateOf(false)
-        }
-        var isPasswordError by remember {
-            mutableStateOf(false)
-        }
-        var isPasswordShown by remember {
-            mutableStateOf(true)
-        }
-        var passwordHide by remember {
-            mutableStateOf(VisualTransformation.None)
-        }
         val emailError = emailErrorText
         val passwordError = passwordErrorText
 
@@ -125,15 +99,15 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
         )
 
         UserTextField(
-            isError = isEmailError,
+            isError = viewModel.isEmailError,
             errorText = emailError,
             visualTransformation = VisualTransformation.None,
             keyboardType = KeyboardType.Email,
             action = ImeAction.Next,
-            value = email,
+            value = viewModel.email,
             onValueChange = {
-                email = it
-                isEmailError = emailValidation(email)
+                viewModel.email = it
+                viewModel.isEmailError = emailValidation(viewModel.email)
             },
             placeholder = null,
             modifier = Modifier.constrainAs(emailTextField){
@@ -153,15 +127,15 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
         )
 
         UserTextField(
-            isError = isPasswordError,
+            isError = viewModel.isPasswordError,
             errorText = passwordError,
-            visualTransformation = passwordHide,
+            visualTransformation = viewModel.passwordHide,
             keyboardType = KeyboardType.Password,
             action = ImeAction.Done,
-            value = password,
+            value = viewModel.password,
             onValueChange = {
-                password = it
-                isPasswordError = passwordValidation(password)
+                viewModel.password = it
+                viewModel.isPasswordError = passwordValidation(viewModel.password)
             },
             placeholder = null,
             modifier = Modifier.constrainAs(passwordTextField){
@@ -175,9 +149,9 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                 painter = painterResource(R.drawable.ic_password_action),
                 contentDescription = "Show and Hide Password",
                 modifier = Modifier.clickable{
-                    isPasswordShown = !isPasswordShown
+                    viewModel.isPasswordShown = !viewModel.isPasswordShown
 
-                    passwordHide = if(isPasswordShown){
+                    viewModel.passwordHide = if(viewModel.isPasswordShown){
                         VisualTransformation.None
                     }else{
                         PasswordVisualTransformation()
@@ -187,13 +161,13 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
         }
 
         RememberMeRow(
-            checked = isChecked,
+            checked = viewModel.isChecked,
             modifier = Modifier.constrainAs(rememberMe){
                 top.linkTo(passwordTextField.bottom, margin = 20.dp)
                 start.linkTo(parent.start)
             }
         ) {
-            isChecked = it
+            viewModel.isChecked = it
         }
 
         OnBoardingNextButton(
@@ -205,24 +179,24 @@ fun SignUpView(viewModel: SignUpViewModel,navController: NavHostController){
                 width = Dimension.fillToConstraints
             }
         ) {
-            isEmailError = emailValidation(email)
-            isPasswordError = passwordValidation(password)
-            if(!isEmailError && !isPasswordError){
+            viewModel.isEmailError = emailValidation(viewModel.email)
+            viewModel.isPasswordError = passwordValidation(viewModel.password)
+            if(!viewModel.isEmailError && !viewModel.isPasswordError){
                 viewModel.signUp(
-                    email = email,
-                    password= password,
+                    email = viewModel.email,
+                    password= viewModel.password,
                     onSuccess = { it ->
                         Toast.makeText(context,"Signup Successfully!!", Toast.LENGTH_LONG).show()
                         val user = User(
                             userId = it.user!!.uid,
-                            userEmail = email,
-                            password = password,
+                            userEmail = viewModel.email,
+                            password = viewModel.password,
                         )
                         viewModel.createUser(
                             user = user,
                             onSuccess = {
                                 Toast.makeText(context,"User Created Successfully", Toast.LENGTH_LONG).show()
-                                if(isChecked){
+                                if(viewModel.isChecked){
                                     viewModel.storeId(user.userId ?: "")
                                 }
                                 navController.navigate(NavRoute.SelectCountry.route){

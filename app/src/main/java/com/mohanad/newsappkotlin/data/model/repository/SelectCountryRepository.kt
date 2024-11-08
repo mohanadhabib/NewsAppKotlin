@@ -1,23 +1,20 @@
 package com.mohanad.newsappkotlin.data.model.repository
 
 import com.mohanad.newsappkotlin.data.datasource.firebase.SelectCountryFirebase
-import com.mohanad.newsappkotlin.data.datasource.retrofit.CountriesApi
 import com.mohanad.newsappkotlin.data.datasource.retrofit.CountriesRetrofit
 import com.mohanad.newsappkotlin.data.model.Country
 
 class SelectCountryRepository {
 
+    // data source instances
+    private val firebase = SelectCountryFirebase()
+    private val retrofit = CountriesRetrofit()
+
     // Get Countries names and flags from the api
     suspend fun getAllCountries(onFailure: (Exception) -> Unit):List<Country>?{
-        return try {
-            CountriesRetrofit.getRetrofit()
-                ?.create(CountriesApi::class.java)
-                ?.getAllCountries()
-        }
-        catch (e:Exception){
-            onFailure(e)
-            null
-        }
+        return retrofit.getAllCountries(
+            onFailure = onFailure
+        )
     }
 
     // Filtering the countries list to get the matched searched countries list
@@ -33,7 +30,7 @@ class SelectCountryRepository {
 
     // Storing the country name into the user info in firestore
     fun storeUserCountry(countryName:String,onSuccess:(Void?) -> Unit,onFailure:(Exception)->Unit){
-        SelectCountryFirebase.storeUserCountry(
+        firebase.storeUserCountry(
             countryName = countryName,
             onSuccess = onSuccess,
             onFailure = onFailure

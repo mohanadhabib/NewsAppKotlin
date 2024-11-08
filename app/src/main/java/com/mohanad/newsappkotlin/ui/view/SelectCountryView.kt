@@ -20,9 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -47,15 +44,13 @@ import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
-import com.mohanad.newsappkotlin.ui.view.composable.BackArrow
-import com.mohanad.newsappkotlin.ui.view.composable.LabelText
-import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
+import com.mohanad.newsappkotlin.ui.view.composable.SetupScreensTemplate
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.SelectCountryViewModel
 
 // SelectCountry Screen
 @Composable
-fun SelectCountryView(viewModel: SelectCountryViewModel,navController: NavController){
+fun SelectCountryView(viewModel: SelectCountryViewModel,navController: NavHostController){
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -66,50 +61,59 @@ fun SelectCountryView(viewModel: SelectCountryViewModel,navController: NavContro
 
         val context = LocalContext.current
 
-        var searchTxt by remember {
-            mutableStateOf("")
-        }
-
-        var selectedName by remember {
-            mutableStateOf("")
-        }
-
         val allCountriesList by viewModel.getAllCountries(
             onFailure = { Toast.makeText(context,"Cannot Get Countries",Toast.LENGTH_SHORT).show() }
         ).observeAsState(initial = emptyList())
         
         val searchedCountries by viewModel.getSearchedCountries(
-            name = searchTxt,
+            name = viewModel.searchTxt,
             list = allCountriesList).observeAsState(initial = emptyList())
 
-        var myList = if(searchTxt.isEmpty()) allCountriesList else searchedCountries
+        var myList = if(viewModel.searchTxt.isEmpty()) allCountriesList else searchedCountries
 
-        BackArrow(
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier.constrainAs(backBtn){
+        SetupScreensTemplate(
+            navController = navController,
+            arrowModifier = Modifier.constrainAs(backBtn){
                 top.linkTo(parent.top, margin = 20.dp)
                 start.linkTo(parent.start)
-            })
-
-        LabelText(
-            text = "Select your Country",
-            modifier = Modifier.constrainAs(text){
+            },
+            labelModifier = Modifier.constrainAs(text){
                 top.linkTo(backBtn.top)
                 bottom.linkTo(backBtn.bottom)
                 start.linkTo(backBtn.end)
                 end.linkTo(parent.end)
-            })
+            },
+            buttonModifier = Modifier.constrainAs(nextBtn){
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+            labelTxt = "Select your Country"
+        ) {
+            viewModel.storeUserCountry(
+                countryName = viewModel.selectedName,
+                onSuccess = {
+                    Toast.makeText(context, "Country Stored Successfully", Toast.LENGTH_SHORT)
+                        .show()
+                    navController.navigate(NavRoute.Topics.route)
+                },
+                onFailure = {
+                    Toast.makeText(context, "Cannot Store The Country", Toast.LENGTH_SHORT)
+                        .show()
+
+                }
+            )
+        }
 
         UserTextField(
-            value = searchTxt,
+            value = viewModel.searchTxt,
             errorText = "",
             isError = false,
             keyboardType = KeyboardType.Text,
             action = ImeAction.Search,
             onValueChange = {
-                searchTxt = it
+                viewModel.searchTxt = it
                 myList = searchedCountries
             },
             modifier = Modifier.constrainAs(searchTextField){
@@ -144,30 +148,9 @@ fun SelectCountryView(viewModel: SelectCountryViewModel,navController: NavContro
             items(myList){ item ->
                 CountryListItem(
                     country = item,
-                    selectedName = selectedName,
-                    onClick = {selectedName = it})
+                    selectedName = viewModel.selectedName,
+                    onClick = {viewModel.selectedName = it})
             }
-        }
-
-        OnBoardingNextButton(
-            text = "Next",
-            modifier = Modifier.constrainAs(nextBtn){
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }) {
-            viewModel.storeUserCountry(
-                countryName = selectedName,
-                onSuccess = {
-                    Toast.makeText(context,"Country Stored Successfully",Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoute.Topics.route)
-                },
-                onFailure = {
-                    Toast.makeText(context,"Cannot Store The Country",Toast.LENGTH_SHORT).show()
-
-                }
-            )
         }
     }
 }

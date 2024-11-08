@@ -8,12 +8,16 @@ import com.mohanad.newsappkotlin.data.datasource.sharedpreferences.UserSharedPre
 
 class LoginRepository (private val context:Context){
 
+    // data source instances
+    private val firebase = LoginFirebase()
+    private val sharedPreferences = UserSharedPreferences()
+
     // The stored userId in shared preferences
-    val storedId = MutableLiveData<String>(UserSharedPreferences.getStoredId(context))
+    val storedId = MutableLiveData<String>(sharedPreferences.getStoredId(context))
 
     // Login and authenticating user from firebase
     fun login(email: String, password: String, onSuccess: (AuthResult)-> Unit, onFailure: (Exception)-> Unit,onExceptionFound:(Exception)->Unit ){
-        LoginFirebase.login(
+        firebase.login(
             email = email,
             password = password,
             onSuccess = onSuccess,
@@ -24,7 +28,7 @@ class LoginRepository (private val context:Context){
 
     // Storing the userId in shared preferences
     fun storeId(id:String){
-        UserSharedPreferences.storeId(
+        sharedPreferences.storeId(
             context = context,
             id =id
         )

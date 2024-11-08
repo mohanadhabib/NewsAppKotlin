@@ -1,5 +1,8 @@
 package com.mohanad.newsappkotlin.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +14,10 @@ import kotlinx.coroutines.launch
 class SelectCountryViewModel :ViewModel() {
 
     private val repository = SelectCountryRepository()
+
+    var searchTxt by mutableStateOf("")
+
+    var selectedName by mutableStateOf("")
 
     // Get Countries names and flags from the api
     fun getAllCountries(onFailure: (Exception) -> Unit):LiveData<List<Country>>{

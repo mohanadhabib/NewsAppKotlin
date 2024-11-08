@@ -1,23 +1,21 @@
 package com.mohanad.newsappkotlin.data.model.repository
 
 import com.mohanad.newsappkotlin.data.datasource.firebase.NewsSourceFirebase
-import com.mohanad.newsappkotlin.data.datasource.retrofit.NewsSourceApi
-import com.mohanad.newsappkotlin.data.datasource.retrofit.NewsSourceRetrofit
+import com.mohanad.newsappkotlin.data.datasource.retrofit.NewsRetrofit
 import com.mohanad.newsappkotlin.data.model.NewsSource
 import com.mohanad.newsappkotlin.data.model.NewsSourceResponse
 
 class NewsSourceRepository {
 
+    // data source instances
+    private val firebase = NewsSourceFirebase()
+    private val retrofit = NewsRetrofit()
+
     // get all news sources from the restApi
-    suspend fun getNewsSource(apiKey: String , onFailure:(Exception)->Unit):NewsSourceResponse?{
-        return try {
-            NewsSourceRetrofit.getRetrofit()
-                ?.create(NewsSourceApi::class.java)
-                ?.getNewsSource(apiKey)
-        }catch (e:Exception){
-            onFailure(e)
-            null
-        }
+    suspend fun getNewsSource(onFailure:(Exception)->Unit): NewsSourceResponse?{
+        return retrofit.getNewsSource (
+            onFailure = onFailure
+        )
     }
 
     // get only the searched news source from the complete list
@@ -33,7 +31,7 @@ class NewsSourceRepository {
 
     // store user's preferred news sources into firebase firestore
     fun storeNewsSources(list: List<String> , onSuccess:(Void?) -> Unit , onFailure: (Exception) -> Unit ){
-        NewsSourceFirebase.storeNewsSources(
+        firebase.storeNewsSources(
             list = list,
             onSuccess = onSuccess,
             onFailure = onFailure

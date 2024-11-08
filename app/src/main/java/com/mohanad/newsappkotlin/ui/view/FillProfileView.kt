@@ -15,10 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,9 +34,7 @@ import com.mohanad.newsappkotlin.R
 import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGreyContainer
-import com.mohanad.newsappkotlin.ui.view.composable.BackArrow
-import com.mohanad.newsappkotlin.ui.view.composable.LabelText
-import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
+import com.mohanad.newsappkotlin.ui.view.composable.SetupScreensTemplate
 import com.mohanad.newsappkotlin.ui.view.composable.TextFieldLabel
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.view.validation.nameErrorText
@@ -67,59 +61,74 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
         val hGuideLine = createGuidelineFromTop(0.25f)
 
 
-        var imageUrl by remember {
-            mutableStateOf(Uri.EMPTY)
-        }
-
-        var userNameTextField by remember {
-            mutableStateOf("")
-        }
-
-        var fullNameTextField by remember {
-            mutableStateOf("")
-        }
-
-        var phoneNumberTextField by remember {
-            mutableStateOf("")
-        }
-
-        var isNameError by remember {
-            mutableStateOf(false)
-        }
-
-        var isFullNameError by remember {
-            mutableStateOf(false)
-        }
-
-        var isPhoneNumberError by remember {
-            mutableStateOf(false)
-        }
-
         val pickImageLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) {
-            imageUrl = it
+            viewModel.imageUrl = it
         }
 
         val nameError = nameErrorText
         val fullNameError = nameErrorText
         val phoneError = phoneErrorText
 
-        BackArrow(
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier.constrainAs(backBtn){
+        SetupScreensTemplate(
+            navController = navController,
+            arrowModifier = Modifier.constrainAs(backBtn){
                 top.linkTo(parent.top, margin = 20.dp)
                 start.linkTo(parent.start)
-            })
-
-        LabelText(
-            text = "Fill your profile",
-            modifier = Modifier.constrainAs(text){
+            },
+            labelModifier = Modifier.constrainAs(text){
                 top.linkTo(backBtn.top)
                 bottom.linkTo(backBtn.bottom)
                 start.linkTo(backBtn.end)
                 end.linkTo(parent.end)
-            })
+            },
+            buttonModifier = Modifier.constrainAs(nextBtn){
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+            labelTxt = "Fill your profile"
+        ) {
+
+            viewModel.isNameError = nameValidation(viewModel.userNameTextField)
+            viewModel.isFullNameError = nameValidation(viewModel.fullNameTextField)
+            viewModel.isPhoneNumberError = phoneValidation(viewModel.phoneNumberTextField)
+
+            if(!viewModel.isNameError && !viewModel.isFullNameError && !viewModel.isPhoneNumberError && viewModel.imageUrl != null){
+                viewModel.storeUserImage(
+                    imageUrl = viewModel.imageUrl ?: Uri.EMPTY,
+                    onSuccess = {
+                        viewModel.getUserImageAsUri(
+                            onSuccess =  {
+                                viewModel.storeAllUserData(
+                                    name = viewModel.userNameTextField,
+                                    fullName = viewModel.fullNameTextField,
+                                    phone = viewModel.phoneNumberTextField,
+                                    imageUrl = it!!,
+                                    onSuccess = {
+                                        Toast.makeText(context,"User Info Added Successfully", Toast.LENGTH_SHORT).show()
+                                        navController.navigate(NavRoute.Home.route){
+                                            popUpTo(NavRoute.SelectCountry.route){
+                                                inclusive = true
+                                            }
+                                        }
+                                    },
+                                    onFailure = {
+                                        Toast.makeText(context,"Sorry, Couldn't store your info", Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                            },
+                            onFailure = {
+                                Toast.makeText(context,"Sorry, Couldn't get your profile image", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    },
+                    onFailure = {
+                        Toast.makeText(context,"Sorry, Couldn't Store your profile image", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
 
         Box(
             modifier = Modifier
@@ -133,9 +142,9 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
                 },
             contentAlignment = Alignment.BottomEnd
         ){
-            if(imageUrl != null){
+            if(viewModel.imageUrl != null){
                 Image(
-                    painter = rememberAsyncImagePainter(imageUrl),
+                    painter = rememberAsyncImagePainter(viewModel.imageUrl),
                     contentDescription ="User Photo",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -166,14 +175,14 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
             })
 
         UserTextField(
-            value = userNameTextField,
+            value = viewModel.userNameTextField,
             errorText = nameError,
-            isError = isNameError,
+            isError = viewModel.isNameError,
             keyboardType = KeyboardType.Text,
             action = ImeAction.Next,
             onValueChange = {
-                userNameTextField = it
-                isNameError = nameValidation(userNameTextField)
+                viewModel.userNameTextField = it
+                viewModel.isNameError = nameValidation(viewModel.userNameTextField)
             },
             modifier = Modifier.constrainAs(userTextField){
                 top.linkTo(userTxt.bottom , margin = 5.dp)
@@ -193,14 +202,14 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
             })
 
         UserTextField(
-            value = fullNameTextField,
+            value = viewModel.fullNameTextField,
             errorText = fullNameError,
-            isError = isFullNameError,
+            isError = viewModel.isFullNameError,
             keyboardType = KeyboardType.Text,
             action = ImeAction.Next,
             onValueChange = {
-                fullNameTextField = it
-                isFullNameError = nameValidation(fullNameTextField)
+                viewModel.fullNameTextField = it
+                viewModel.isFullNameError = nameValidation(viewModel.fullNameTextField)
             },
             modifier = Modifier.constrainAs(nameTextField){
                 top.linkTo(fullNameTxt.bottom , margin = 5.dp)
@@ -220,14 +229,14 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
             })
 
         UserTextField(
-            value = phoneNumberTextField,
+            value = viewModel.phoneNumberTextField,
             errorText = phoneError,
-            isError = isPhoneNumberError,
+            isError = viewModel.isPhoneNumberError,
             keyboardType = KeyboardType.Phone,
             action = ImeAction.Next,
             onValueChange = {
-                phoneNumberTextField = it
-                isPhoneNumberError = phoneValidation(phoneNumberTextField)
+                viewModel.phoneNumberTextField = it
+                viewModel.isPhoneNumberError = phoneValidation(viewModel.phoneNumberTextField)
             },
             modifier = Modifier.constrainAs(phoneTextField){
                 top.linkTo(phoneNumberTxt.bottom , margin = 5.dp)
@@ -238,53 +247,5 @@ fun FillProfileView(viewModel: FillProfileViewModel , navController :NavHostCont
             visualTransformation = VisualTransformation.None,
             placeholder = null,
             trailing = null)
-
-        OnBoardingNextButton(
-            text = "Next",
-            modifier = Modifier.constrainAs(nextBtn){
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }) {
-            isNameError = nameValidation(userNameTextField)
-            isFullNameError = nameValidation(fullNameTextField)
-            isPhoneNumberError = phoneValidation(phoneNumberTextField)
-
-            if(!isNameError && !isFullNameError && !isPhoneNumberError){
-                viewModel.storeUserImage(
-                    imageUrl = imageUrl,
-                    onSuccess = {
-                        viewModel.getUserImageAsUri(
-                            onSuccess =  {
-                                viewModel.storeAllUserData(
-                                    name = userNameTextField,
-                                    fullName = fullNameTextField,
-                                    phone = phoneNumberTextField,
-                                    imageUrl = it!!,
-                                    onSuccess = {
-                                        Toast.makeText(context,"User Info Added Successfully",Toast.LENGTH_SHORT).show()
-                                        navController.navigate(NavRoute.Home.route){
-                                            popUpTo(NavRoute.SelectCountry.route){
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
-                                    onFailure = {
-                                        Toast.makeText(context,"Sorry, Couldn't store your info",Toast.LENGTH_SHORT).show()
-                                    }
-                                )
-                            },
-                            onFailure = {
-                                Toast.makeText(context,"Sorry, Couldn't get your profile image",Toast.LENGTH_SHORT).show()
-                            }
-                        )
-                    },
-                    onFailure = {
-                        Toast.makeText(context,"Sorry, Couldn't Store your profile image",Toast.LENGTH_SHORT).show()
-                    }
-                )
-            }
-        }
     }
 }

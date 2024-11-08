@@ -16,10 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,9 +34,7 @@ import com.mohanad.newsappkotlin.R
 import com.mohanad.newsappkotlin.navigation.NavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
-import com.mohanad.newsappkotlin.ui.view.composable.BackArrow
-import com.mohanad.newsappkotlin.ui.view.composable.LabelText
-import com.mohanad.newsappkotlin.ui.view.composable.OnBoardingNextButton
+import com.mohanad.newsappkotlin.ui.view.composable.SetupScreensTemplate
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.TopicsViewModel
 
@@ -57,46 +51,52 @@ fun TopicsView(viewModel: TopicsViewModel , navController: NavHostController){
 
         val (backBtn,text,list,nextBtn,searchTextField) = createRefs()
 
-        var searchTxt by remember {
-            mutableStateOf("")
-        }
-
         val allTopics by viewModel.getAllTopics().observeAsState()
 
-        val searchedTopics by viewModel.getSearchedTopics(searchTxt,allTopics!!).observeAsState()
+        val searchedTopics by viewModel.getSearchedTopics(viewModel.searchTxt,allTopics!!).observeAsState()
 
         val topics = if(searchedTopics?.size == 0) allTopics else searchedTopics
 
-        val selectedTitles = remember {
-            mutableStateListOf<String>()
-        }
-
-        BackArrow(
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier.constrainAs(backBtn){
+        SetupScreensTemplate(
+            navController = navController,
+            arrowModifier = Modifier.constrainAs(backBtn){
                 top.linkTo(parent.top, margin = 20.dp)
                 start.linkTo(parent.start)
-            })
-
-        LabelText(
-            text = "Choose your Topics",
-            modifier = Modifier.constrainAs(text){
+            },
+            labelModifier = Modifier.constrainAs(text){
                 top.linkTo(backBtn.top)
                 bottom.linkTo(backBtn.bottom)
                 start.linkTo(backBtn.end)
                 end.linkTo(parent.end)
-            })
+            },
+            buttonModifier = Modifier.constrainAs(nextBtn){
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+            labelTxt = "Choose your Topics"
+        ) {
+            viewModel.storeTopics(
+                list = viewModel.selectedTitles,
+                onSuccess = {
+                    Toast.makeText(context,"Topics Saved Successfully",Toast.LENGTH_SHORT).show()
+                    navController.navigate(NavRoute.NewsSource.route)
+                },
+                onFailure = {
+                    Toast.makeText(context ,"Cannot save topics, Try again",Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
 
         UserTextField(
-            value = searchTxt,
+            value = viewModel.searchTxt,
             errorText = "",
             isError = false,
             keyboardType = KeyboardType.Text,
             action = ImeAction.Search,
             onValueChange = {
-                searchTxt = it
+                viewModel.searchTxt = it
             },
             modifier = Modifier.constrainAs(searchTextField){
                 top.linkTo(backBtn.bottom, margin = 20.dp)
@@ -131,31 +131,11 @@ fun TopicsView(viewModel: TopicsViewModel , navController: NavHostController){
             items(topics!!){ topic ->
                 ListItem(
                     title = topic,
-                    selectedTitles = selectedTitles
+                    selectedTitles = viewModel.selectedTitles
                     ){
-                    selectedTitles.add(topic)
+                    viewModel.selectedTitles.add(topic)
                 }
             }
-        }
-
-        OnBoardingNextButton(
-            text = "Next",
-            modifier = Modifier.constrainAs(nextBtn){
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }) {
-            viewModel.storeTopics(
-                list = selectedTitles,
-                onSuccess = {
-                    Toast.makeText(context,"Topics Saved Successfully",Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoute.NewsSource.route)
-                },
-                onFailure = {
-                    Toast.makeText(context ,"Cannot save topics, Try again",Toast.LENGTH_SHORT).show()
-                }
-            )
         }
     }
 }

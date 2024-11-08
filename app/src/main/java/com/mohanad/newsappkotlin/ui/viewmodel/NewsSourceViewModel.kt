@@ -1,5 +1,9 @@
 package com.mohanad.newsappkotlin.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,14 +14,18 @@ import com.mohanad.newsappkotlin.data.model.repository.NewsSourceRepository
 import kotlinx.coroutines.launch
 
 class NewsSourceViewModel :ViewModel() {
+
     private val repository = NewsSourceRepository()
 
+    var searchTxt by mutableStateOf("")
+
+    val selectedList = mutableStateListOf<String>()
+
     // get all news sources from the restApi
-    fun getNewsSource(apiKey:String , onFailure:(Exception)->Unit):LiveData<NewsSourceResponse>{
+    fun getNewsSource(onFailure:(Exception)->Unit):LiveData<NewsSourceResponse>{
         val response = MutableLiveData<NewsSourceResponse>()
         viewModelScope.launch {
             response.value = repository.getNewsSource(
-                apiKey = apiKey,
                 onFailure = onFailure
             )
         }

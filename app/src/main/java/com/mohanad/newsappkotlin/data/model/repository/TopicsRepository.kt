@@ -4,6 +4,9 @@ import com.mohanad.newsappkotlin.data.datasource.firebase.TopicsFirebase
 
 class TopicsRepository {
 
+    // data source instances
+    private val firebase = TopicsFirebase()
+
     // Get all available topics
     fun getAllTopics():List<String>{
         val topicsList = listOf("Top" , "National" , "Sports" ,"Lifestyle" , "Business" , "Health" , "Fashion" , "Technology" , "Science" , "Arts" , "Politics")
@@ -23,7 +26,7 @@ class TopicsRepository {
 
     // Storing selected topics in firebase firestore
     fun storeTopics(list: List<String> , onSuccess:(Void?)->Unit , onFailure:(Exception)->Unit){
-        TopicsFirebase.storeTopics(
+        firebase.storeTopics(
             list = list,
             onSuccess = onSuccess,
             onFailure = onFailure

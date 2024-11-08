@@ -7,9 +7,12 @@ import com.mohanad.newsappkotlin.data.datasource.firebase.FillProfileFirebase
 
 class FillProfileRepository {
 
+    // data source instances
+    private val firebase = FillProfileFirebase()
+
     // store the user selected image into firebase storage
     fun storeUserImage(imageUrl: Uri, onSuccess :(UploadTask.TaskSnapshot?)-> Unit, onFailure:(Exception)->Unit ){
-        FillProfileFirebase.storeUserImage(
+        firebase.storeUserImage(
             imageUrl = imageUrl,
             onSuccess = onSuccess,
             onFailure = onFailure
@@ -18,7 +21,7 @@ class FillProfileRepository {
 
     // get the uri of stored user image from the firebase storage
     fun getUserImageAsUri(onSuccess: (Uri?) -> Unit , onFailure: (Exception) -> Unit){
-        FillProfileFirebase.getUserImageAsUri(
+        firebase.getUserImageAsUri(
             onSuccess = onSuccess,
             onFailure = onFailure
         )
@@ -26,7 +29,7 @@ class FillProfileRepository {
 
     // store all the rest of user info like name and phone
     fun storeAllUserData(name:String , fullName:String , phone:String , imageUrl: Uri , onSuccess: (Void?) -> Unit , onFailure: (Exception) -> Unit){
-        FillProfileFirebase.storeAllUserData(
+        firebase.storeAllUserData(
             name = name,
             fullName = fullName,
             phone = phone,
