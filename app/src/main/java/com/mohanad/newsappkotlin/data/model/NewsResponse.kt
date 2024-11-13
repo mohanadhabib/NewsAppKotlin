@@ -5,15 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class NewsResponse(
 
     @SerializedName("status")
-    val status:String?,
+    val status:String,
 
     @SerializedName("totalResults")
-    val totalResults:Long?,
+    val totalResults:Int,
 
-    @SerializedName("results")
-    val results:List<News>?,
-
-    @SerializedName("nextPage")
-    val nextPage:String?
+    @SerializedName("articles")
+    val articles:List<News>?,
 
 )
