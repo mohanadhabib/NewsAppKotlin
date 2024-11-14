@@ -2,12 +2,15 @@ package com.mohanad.newsappkotlin.ui.view.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,10 +26,14 @@ import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
 
 @Composable
-fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier , onMoreClick: ()-> Unit , onItemClick: ()->Unit ){
+fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier , onMoreClick: ()-> Unit ,onLongPress:(Offset)->Unit ,  onItemClick: ()->Unit ){
 
     ConstraintLayout (
-        modifier = modifier.padding(horizontal = 5.dp).clickable { onItemClick() }){
+        modifier = modifier.padding(horizontal = 5.dp).clickable { onItemClick() }.pointerInput(Unit){
+            detectTapGestures (
+                onLongPress = onLongPress
+            )
+        }){
 
         val (image,category,title,source,timeIcon,time,more) = createRefs()
 

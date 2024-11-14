@@ -1,31 +1,46 @@
 package com.mohanad.newsappkotlin.data.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "news")
 data class News(
 
+    @PrimaryKey(true)
+    @ColumnInfo("id")
+    @Transient
+    var id:Int,
+
     @SerializedName("source")
-    val source:ArticleSource,
+    var source:ArticleSource?,
 
     @SerializedName("author")
-    val author:String?,
+    var author:String?,
 
+    @ColumnInfo("title")
     @SerializedName("title")
-    val title:String,
+    var title:String,
 
     @SerializedName("description")
-    val description:String,
+    var description:String?,
 
+    @ColumnInfo("url")
     @SerializedName("url")
-    val url:String,
+    var url:String,
 
+    @ColumnInfo("image")
     @SerializedName("urlToImage")
-    val urlToImage:String,
+    var urlToImage:String,
 
+    @ColumnInfo("publishedAt")
     @SerializedName("publishedAt")
-    val publishedAt:String,
+    var publishedAt:String,
 
     @SerializedName("content")
-    val content:String
+    var content:String?,
 
+    @ColumnInfo("category")
+    var category:String?
 )

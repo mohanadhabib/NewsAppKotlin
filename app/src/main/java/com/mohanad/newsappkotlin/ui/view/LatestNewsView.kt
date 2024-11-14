@@ -2,6 +2,7 @@ package com.mohanad.newsappkotlin.ui.view
 
 import android.util.Log
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ fun LatestNewsView(viewModel: BottomHomeViewModel){
             .padding(start = 20.dp , end = 20.dp , top = 20.dp)
     ){
         val context = LocalContext.current
+        val savedNews by viewModel.getSavedNews(context).observeAsState()
         val newsByCategory by viewModel.getNewsByCategory(viewModel.category).observeAsState()
 
         val (logoImg,allRow,newsTab,newsScreen) = createRefs()
@@ -83,6 +85,16 @@ fun LatestNewsView(viewModel: BottomHomeViewModel){
                     trendingNews = item ,
                     categoryTxt = viewModel.category,
                     timeTxt = viewModel.getTimeElapsed(item.publishedAt).value ?: "",
+                    onLongPress = {
+                        val newItem = item.copy(category = viewModel.category)
+                        if(!viewModel.isContainNews(newItem,savedNews ?: emptyList())){
+                            viewModel.insertNews(newItem,context)
+                            Toast.makeText(context,"News article saved",Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     onMoreClick = { TODO() }) {
                     Log.e("TAGG",item.url)
                     WebView(context).loadUrl(item.url)

@@ -1,5 +1,6 @@
 package com.mohanad.newsappkotlin.ui.view
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -29,6 +31,8 @@ fun TrendingNewsView(navController: NavHostController,viewModel: BottomHomeViewM
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ){
+        val context = LocalContext.current
+        val savedNews by viewModel.getSavedNews(context).observeAsState()
         val latestNews by viewModel.getLatestNews().observeAsState()
 
         val (back,trendingTxt,trendingList) = createRefs()
@@ -70,6 +74,16 @@ fun TrendingNewsView(navController: NavHostController,viewModel: BottomHomeViewM
                     trendingNews = item,
                     timeTxt = viewModel.getTimeElapsed(item.publishedAt).value ?: "" ,
                     modifier = Modifier,
+                    onLongPress = {
+                        val newItem = item.copy(category = viewModel.category)
+                        if(!viewModel.isContainNews(newItem,savedNews ?: emptyList())){
+                            viewModel.insertNews(newItem,context)
+                            Toast.makeText(context,"News article saved",Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     onMoreClick = { /*TODO*/ }) {
                 }
             }

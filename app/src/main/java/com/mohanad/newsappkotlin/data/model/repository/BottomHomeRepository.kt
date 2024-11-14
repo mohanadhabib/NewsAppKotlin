@@ -1,6 +1,9 @@
 package com.mohanad.newsappkotlin.data.model.repository
 
+import android.content.Context
 import com.mohanad.newsappkotlin.data.datasource.retrofit.NewsRetrofit
+import com.mohanad.newsappkotlin.data.datasource.room.SavedNewsDatabase
+import com.mohanad.newsappkotlin.data.model.News
 import com.mohanad.newsappkotlin.data.model.NewsResponse
 import java.time.Duration
 import java.time.LocalDateTime
@@ -37,5 +40,23 @@ class BottomHomeRepository {
             e.printStackTrace()
         }
         return getTimeElapsed
+    }
+
+    suspend fun insertNews(news:News , context: Context){
+        SavedNewsDatabase.getDatabase(context).dao.insertNews(news = news)
+    }
+
+    suspend fun getSavedNews(context: Context):List<News>{
+        return SavedNewsDatabase.getDatabase(context).dao.getSavedNews()
+    }
+
+    fun isContainNews(news: News , list: List<News>):Boolean{
+        var isContainThisNews = false
+        list.forEach { item ->
+            if(news.title == item.title){
+                isContainThisNews = true
+            }
+        }
+        return isContainThisNews
     }
 }

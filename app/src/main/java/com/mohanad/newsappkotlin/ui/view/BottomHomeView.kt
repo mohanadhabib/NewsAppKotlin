@@ -1,6 +1,7 @@
 package com.mohanad.newsappkotlin.ui.view
 
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,11 +42,12 @@ fun BottomHomeView(viewModel: BottomHomeViewModel , navController: NavHostContro
     ConstraintLayout (
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp , end = 20.dp , top = 20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ){
 
         val context = LocalContext.current
         val latestNews by viewModel.getLatestNews().observeAsState()
+        val savedNews by viewModel.getSavedNews(context).observeAsState()
         val newsByCategory by viewModel.getNewsByCategory(viewModel.category).observeAsState()
         val timeOfTopTile by viewModel.getTimeElapsed(latestNews?.articles?.get(0)?.publishedAt ?:"").observeAsState()
 
@@ -114,6 +116,16 @@ fun BottomHomeView(viewModel: BottomHomeViewModel , navController: NavHostContro
                 height = Dimension.fillToConstraints
                 width = Dimension.fillToConstraints
             },
+            onLongPress = {
+                val newItem = latestNews?.articles?.get(0)!!.copy(category = viewModel.category)
+                if(!viewModel.isContainNews(newItem,savedNews ?: emptyList())){
+                    viewModel.insertNews(newItem,context)
+                    Toast.makeText(context,"News article saved",Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
+                }
+            },
             onMoreClick = {
                 navController.navigate(BottomNavRoute.HomeTrendingNews.route)
             }) {
@@ -144,21 +156,32 @@ fun BottomHomeView(viewModel: BottomHomeViewModel , navController: NavHostContro
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxHeight().constrainAs(newsScreen){
-                top.linkTo(newsTab.bottom , margin = 10.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom )
+            modifier = Modifier
+                .fillMaxHeight()
+                .constrainAs(newsScreen) {
+                    top.linkTo(newsTab.bottom, margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
 
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            }
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
         ) {
             items(newsByCategory?.articles ?: emptyList()){ item ->
                 NewsTile(
-                    trendingNews = item ,
+                    trendingNews = item,
                     categoryTxt = viewModel.category,
                     timeTxt = viewModel.getTimeElapsed(item.publishedAt).value ?: "",
+                    onLongPress = {
+                        val newItem = item.copy(category = viewModel.category)
+                        if(!viewModel.isContainNews(newItem,savedNews ?: emptyList())){
+                            viewModel.insertNews(newItem,context)
+                            Toast.makeText(context,"News article saved",Toast.LENGTH_SHORT).show()
+                        }else {
+                            Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     onMoreClick = { WebView(context).loadUrl(item.url) }) {
                     WebView(context).loadUrl(item.url)
                 }

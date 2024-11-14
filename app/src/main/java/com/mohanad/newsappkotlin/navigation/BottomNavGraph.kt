@@ -5,9 +5,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mohanad.newsappkotlin.ui.view.BottomBookmarkView
 import com.mohanad.newsappkotlin.ui.view.BottomHomeView
 import com.mohanad.newsappkotlin.ui.view.LatestNewsView
 import com.mohanad.newsappkotlin.ui.view.TrendingNewsView
+import com.mohanad.newsappkotlin.ui.viewmodel.BottomBookmarkViewModel
 import com.mohanad.newsappkotlin.ui.viewmodel.BottomHomeViewModel
 
 @Composable
@@ -21,7 +23,8 @@ fun BottomNavGraph(navController: NavHostController){
 
         }
         composable(route = BottomNavRoute.BookmarkNavItem.route) {
-
+            val viewModel = viewModel(modelClass = BottomBookmarkViewModel::class)
+            BottomBookmarkView(viewModel = viewModel)
         }
         composable(route = BottomNavRoute.ProfileNavItem.route) {
 
