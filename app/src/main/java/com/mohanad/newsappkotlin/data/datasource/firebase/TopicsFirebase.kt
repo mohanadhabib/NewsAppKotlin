@@ -6,7 +6,6 @@ import com.google.firebase.firestore.firestore
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class TopicsFirebase {
-
     // Storing selected topics in firebase firestore
     fun storeTopics(
         list: List<String>,

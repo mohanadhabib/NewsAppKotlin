@@ -9,15 +9,12 @@ import com.mohanad.newsappkotlin.data.model.News
 
 @Database(entities = [News::class] , version = 1)
 @TypeConverters(SavedNewsTypeConverter::class)
-
+// The saved news database class
 abstract class SavedNewsDatabase :RoomDatabase(){
-
     abstract val dao:SavedNewsDao
-
     companion object{
-
+        // Singleton room db instance
         private var database:SavedNewsDatabase? = null
-
         fun getDatabase(context: Context):SavedNewsDatabase{
             if(database == null){
                database = Room.databaseBuilder(context,SavedNewsDatabase::class.java,"Saved News Database")
@@ -27,5 +24,4 @@ abstract class SavedNewsDatabase :RoomDatabase(){
             return database!!
         }
     }
-
 }

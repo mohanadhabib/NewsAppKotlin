@@ -5,7 +5,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginFirebase {
-
     // Login and authenticating user from firebase
     fun login(
         email: String,

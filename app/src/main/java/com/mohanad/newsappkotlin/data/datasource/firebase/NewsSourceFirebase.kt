@@ -6,8 +6,7 @@ import com.google.firebase.firestore.firestore
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class NewsSourceFirebase {
-
-    // store user's preferred news sources into firebase firestore
+    // Store user's preferred news sources into firebase firestore
     fun storeNewsSources(
         list: List<String>,
         onSuccess: (Void?) -> Unit,

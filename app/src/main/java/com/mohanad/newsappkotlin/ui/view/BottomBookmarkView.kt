@@ -24,19 +24,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.mohanad.newsappkotlin.R
+import com.mohanad.newsappkotlin.navigation.BottomNavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 import com.mohanad.newsappkotlin.ui.view.composable.NewsTile
 import com.mohanad.newsappkotlin.ui.view.composable.UserTextField
 import com.mohanad.newsappkotlin.ui.viewmodel.BottomBookmarkViewModel
 
 @Composable
-fun BottomBookmarkView(viewModel: BottomBookmarkViewModel){
+fun BottomBookmarkView(viewModel: BottomBookmarkViewModel ,navController:NavHostController){
     ConstraintLayout (
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ) {
+        val gson = Gson()
         val context = LocalContext.current
 
         val (title,search,text,list) = createRefs()
@@ -107,31 +111,43 @@ fun BottomBookmarkView(viewModel: BottomBookmarkViewModel){
             )
         }
         else{
-            LazyColumn (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .constrainAs(list) {
-                        top.linkTo(search.bottom, margin = 20.dp)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(list) {
+                            top.linkTo(search.bottom, margin = 20.dp)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
 
-                        height = Dimension.fillToConstraints
-                        width = Dimension.fillToConstraints
-                    }
-            ){
-                items(currentList ?: emptyList()){ item ->
-                    NewsTile(
-                        trendingNews = item,
-                        categoryTxt = item.category ?: "",
-                        timeTxt = viewModel.getTimeElapsed(item.publishedAt).value,
-                        onMoreClick = { TODO() },
-                        onLongPress = { TODO() }
-                    ) {
-                        TODO()
+                            height = Dimension.fillToConstraints
+                            width = Dimension.fillToConstraints
+                        }
+                ) {
+                    items(currentList ?: emptyList()) { item ->
+                        NewsTile(
+                            trendingNews = item,
+                            categoryTxt = item.category ?: "",
+                            timeTxt = viewModel.getTimeElapsed(item.publishedAt).value,
+                            onMoreClick = {
+                                val time = viewModel.getTimeElapsed(item.publishedAt).value ?: ""
+                                val news = gson.toJson(item)
+                                navController.currentBackStackEntry?.savedStateHandle?.set("news",news)
+                                navController.currentBackStackEntry?.savedStateHandle?.set("time",time)
+                                navController.navigate(BottomNavRoute.DetailsView.route)
+                            },
+                            onLongPress = { TODO() },
+                            isSwappable = true,
+                            onSwipe = {
+                                viewModel.deleteNews(item, context)
+                            }
+                        ) {
+                            val url = item.url
+                            navController.currentBackStackEntry?.savedStateHandle?.set("url",url)
+                            navController.navigate(BottomNavRoute.WebView.route)
+                        }
                     }
                 }
-            }
         }
     }
 }

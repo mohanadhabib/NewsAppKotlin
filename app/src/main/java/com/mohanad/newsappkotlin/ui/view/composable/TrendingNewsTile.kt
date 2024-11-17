@@ -3,6 +3,7 @@ package com.mohanad.newsappkotlin.ui.view.composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -26,25 +27,30 @@ import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
 
 @Composable
-fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier , onMoreClick: ()-> Unit ,onLongPress:(Offset)->Unit ,  onItemClick: ()->Unit ){
+fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier , onMoreClick: ()-> Unit ,onLongPress:(Offset)->Unit ,  onItemClick: (Offset)->Unit ){
 
     ConstraintLayout (
-        modifier = modifier.padding(horizontal = 5.dp).clickable { onItemClick() }.pointerInput(Unit){
+        modifier = modifier.fillMaxSize().padding(horizontal = 5.dp).pointerInput(Unit){
             detectTapGestures (
-                onLongPress = onLongPress
+                onLongPress = onLongPress,
+                onTap = onItemClick
             )
         }){
 
         val (image,category,title,source,timeIcon,time,more) = createRefs()
+
+        val guideLine = createGuidelineFromTop(0.65f)
 
         Image(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .constrainAs(image) {
                     top.linkTo(parent.top)
+                    bottom.linkTo(guideLine)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
                 },
             painter = rememberAsyncImagePainter(model = trendingNews?.urlToImage),
 
@@ -63,13 +69,14 @@ fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier ,
 
         Text(
             modifier = Modifier.constrainAs(title){
-                top.linkTo(category.bottom , margin = 10.dp)
+                top.linkTo(category.bottom , margin = 8.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
 
                 width = Dimension.fillToConstraints
             },
             text =  trendingNews?.title ?: "",
+            maxLines = 2,
             fontWeight = FontWeight.SemiBold,
             fontSize = 14.sp,
             color = mainBlackGrey)

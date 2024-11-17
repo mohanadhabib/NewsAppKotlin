@@ -6,8 +6,7 @@ import retrofit2.http.Query
 
 // News Source api request
 interface NewsSourceApi {
-
+    // Get sources of news
     @GET("sources")
     suspend fun getNewsSource(@Query("apikey") apiKey:String):NewsSourceResponse
-
 }

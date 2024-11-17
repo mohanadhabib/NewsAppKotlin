@@ -9,10 +9,9 @@ import com.google.firebase.storage.storage
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class FillProfileFirebase {
-
-    val id = Firebase.auth.uid
-
-    // store the user selected image into firebase storage
+    // Current stored user id
+    private val id = Firebase.auth.uid
+    // Store the user selected image into firebase storage
     fun storeUserImage(
         imageUrl: Uri,
         onSuccess: (UploadTask.TaskSnapshot?) -> Unit,
@@ -26,8 +25,7 @@ class FillProfileFirebase {
             onFailure(e)
         }
     }
-
-    // get the uri of stored user image from the firebase storage
+    // Get the uri of stored user image from the firebase storage
     fun getUserImageAsUri(onSuccess: (Uri?) -> Unit, onFailure: (Exception) -> Unit) {
         try {
             Firebase.storage.getReference(id!!).downloadUrl
@@ -37,8 +35,7 @@ class FillProfileFirebase {
             onFailure(e)
         }
     }
-
-    // store all the rest of user info like name and phone
+    // Store all the rest of user info like name and phone
     fun storeAllUserData(
         name: String,
         fullName: String,

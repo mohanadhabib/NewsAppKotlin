@@ -6,19 +6,16 @@ import com.mohanad.newsappkotlin.data.model.NewsSource
 import com.mohanad.newsappkotlin.data.model.NewsSourceResponse
 
 class NewsSourceRepository {
-
-    // data source instances
+    // Data source instances
     private val firebase = NewsSourceFirebase()
     private val retrofit = NewsSourceRetrofit()
-
-    // get all news sources from the restApi
+    // Get all news sources from the restApi
     suspend fun getNewsSource(onFailure:(Exception)->Unit): NewsSourceResponse?{
         return retrofit.getNewsSource (
             onFailure = onFailure
         )
     }
-
-    // get only the searched news source from the complete list
+    // Get only the searched news source from the complete list
     fun getSearchedNewsSource(title:String ,allNewsList:List<NewsSource> ):List<NewsSource>{
         val list = mutableListOf<NewsSource>()
         allNewsList.forEach {
@@ -28,8 +25,7 @@ class NewsSourceRepository {
         }
         return list
     }
-
-    // store user's preferred news sources into firebase firestore
+    // Store user's preferred news sources into firebase firestore
     fun storeNewsSources(list: List<String> , onSuccess:(Void?) -> Unit , onFailure: (Exception) -> Unit ){
         firebase.storeNewsSources(
             list = list,

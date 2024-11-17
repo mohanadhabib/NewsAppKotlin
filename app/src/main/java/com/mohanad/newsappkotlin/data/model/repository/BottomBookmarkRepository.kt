@@ -1,6 +1,7 @@
 package com.mohanad.newsappkotlin.data.model.repository
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.mohanad.newsappkotlin.data.datasource.room.SavedNewsDatabase
 import com.mohanad.newsappkotlin.data.model.News
 import java.time.Duration
@@ -10,15 +11,15 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 class BottomBookmarkRepository {
-
+    // Delete news from saved news
     suspend fun deleteNews(news: News, context: Context){
         SavedNewsDatabase.getDatabase(context).dao.deleteNews(news = news)
     }
-
-    suspend fun getSavedNews(context: Context):List<News>{
+    // Get all saved news from saved news db
+    fun getSavedNews(context: Context):LiveData<List<News>>{
         return SavedNewsDatabase.getDatabase(context).dao.getSavedNews()
     }
-
+    // Calculate the time of each time article
     fun getTimeElapsed(time:String):String{
         var getTimeElapsed = ""
         try {
@@ -37,7 +38,7 @@ class BottomBookmarkRepository {
         }
         return getTimeElapsed
     }
-
+    // Get a searched list from the full saved news list
     fun getSearchedNews(searchTxt:String , list: List<News>): List<News>{
         val newList = mutableListOf<News>()
         list.forEach { item ->
@@ -47,5 +48,4 @@ class BottomBookmarkRepository {
         }
         return newList
     }
-
 }

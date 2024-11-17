@@ -8,7 +8,6 @@ import com.mohanad.newsappkotlin.data.model.User
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class SignUpFirebase {
-
     // Signup and authenticating user from firebase
     fun signUp(
         email: String,
@@ -30,7 +29,6 @@ class SignUpFirebase {
             onExceptionFound(e)
         }
     }
-
     // Storing user data into firebase firestore
     fun createUser(
         user: User,

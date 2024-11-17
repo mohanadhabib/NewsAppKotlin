@@ -12,13 +12,11 @@ import com.mohanad.newsappkotlin.data.model.repository.SelectCountryRepository
 import kotlinx.coroutines.launch
 
 class SelectCountryViewModel :ViewModel() {
-
+    // Repository instance
     private val repository = SelectCountryRepository()
-
+    // State variables
     var searchTxt by mutableStateOf("")
-
     var selectedName by mutableStateOf("")
-
     // Get Countries names and flags from the api
     fun getAllCountries(onFailure: (Exception) -> Unit):LiveData<List<Country>>{
         val list = MutableLiveData<List<Country>>()
@@ -27,7 +25,6 @@ class SelectCountryViewModel :ViewModel() {
         }
         return list
     }
-
     // Filtering the countries list to get the matched searched countries list
     fun getSearchedCountries(name:String,list: List<Country>):LiveData<List<Country>>{
         val newList = MutableLiveData<List<Country>>()
@@ -36,7 +33,6 @@ class SelectCountryViewModel :ViewModel() {
             name = name)
         return newList
     }
-
     // Storing the country name into the user info in firestore
     fun storeUserCountry(countryName:String,onSuccess:(Void?) -> Unit,onFailure:(Exception)->Unit){
         repository.storeUserCountry(

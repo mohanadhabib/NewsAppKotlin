@@ -13,31 +13,27 @@ import com.mohanad.newsappkotlin.data.model.repository.BottomBookmarkRepository
 import kotlinx.coroutines.launch
 
 class BottomBookmarkViewModel : ViewModel() {
-
+    // Repository instance
     private val repository = BottomBookmarkRepository()
-
+    // State variables
     var searchText by mutableStateOf("")
-
+    // Delete news from saved news
     fun deleteNews(news: News, context: Context){
         viewModelScope.launch {
-            repository.deleteNews(news = news , context = context)
+            repository.deleteNews(news = news, context = context)
         }
     }
-
+    // Get all saved news from saved news db
     fun getSavedNews(context: Context):LiveData<List<News>>{
-        val list = MutableLiveData<List<News>>()
-        viewModelScope.launch {
-            list.value = repository.getSavedNews(context)
-        }
-        return list
+        return repository.getSavedNews(context)
     }
-
+    // Calculate the time of each time article
     fun getTimeElapsed(time:String):LiveData<String>{
         val data = MutableLiveData<String>()
         data.value = repository.getTimeElapsed(time)
         return data
     }
-
+    // Get a searched list from the full saved news list
     fun getSearchedNews(searchTxt:String , list: List<News>):LiveData<List<News>>{
         val newList = MutableLiveData<List<News>>()
         newList.value = repository.getSearchedNews(searchTxt,list)

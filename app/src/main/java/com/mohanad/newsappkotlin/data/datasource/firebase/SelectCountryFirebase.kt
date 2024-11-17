@@ -6,7 +6,6 @@ import com.google.firebase.firestore.firestore
 import com.mohanad.newsappkotlin.util.FirebaseConstants
 
 class SelectCountryFirebase {
-
     // Storing the country name into the user info in firestore
     fun storeUserCountry(
         countryName: String,

@@ -2,8 +2,8 @@ package com.mohanad.newsappkotlin.data.model
 
 import com.google.gson.annotations.SerializedName
 
+// News response model parsed from news api
 data class NewsResponse(
-
     @SerializedName("status")
     val status:String,
 
@@ -12,5 +12,4 @@ data class NewsResponse(
 
     @SerializedName("articles")
     val articles:List<News>?,
-
 )

@@ -69,18 +69,13 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.room.ktx)
     // Firebase
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     // Firebase Auth
     implementation(libs.firebase.auth)
     // Firebase FireStore
     implementation(libs.firebase.firestore)
     // Firebase Storage
     implementation(libs.firebase.storage)
-    // Firebase Google Auth
-//    implementation(libs.androidx.credentials)
-//    implementation(libs.androidx.credentials.v130)
-//    implementation(libs.credentials.play.services.auth)
-//    implementation(libs.googleid)
     // Retrofit
     implementation(libs.retrofit)
     // Gson Converter
@@ -88,11 +83,13 @@ dependencies {
     // Coil
     implementation(libs.coil.compose.v250)
     implementation(libs.coil.svg.v250)
+    // Gson
+    implementation(libs.gson)
     // Main Dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.androidx.compose.bom.v20241100))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)

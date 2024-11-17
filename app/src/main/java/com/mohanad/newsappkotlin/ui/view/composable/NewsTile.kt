@@ -5,6 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxDefaults
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,8 +17,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -24,14 +31,63 @@ import com.mohanad.newsappkotlin.data.model.News
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsTile(trendingNews: News?, categoryTxt: String, timeTxt:String?, onMoreClick: ()-> Unit, onLongPress:(Offset)->Unit, onItemClick: ()->Unit ){
-    ConstraintLayout (
-        modifier = Modifier.fillMaxWidth().clickable { onItemClick() }.pointerInput(Unit){
-            detectTapGestures(
-                onLongPress = onLongPress
+fun NewsTile(isSwappable:Boolean, trendingNews: News?, categoryTxt: String, timeTxt:String?, onMoreClick: ()-> Unit, onLongPress:(Offset)->Unit, onSwipe:(() -> Unit)?,onItemClick: (Offset)->Unit ){
+
+    val context = LocalContext.current
+
+    if (isSwappable){
+        val swipeState = SwipeToDismissBoxState(
+            initialValue = SwipeToDismissBoxValue.Settled,
+            positionalThreshold =  SwipeToDismissBoxDefaults.positionalThreshold,
+            density = Density(context = context),
+            confirmValueChange = {
+                if(it == SwipeToDismissBoxValue.EndToStart){
+                    onSwipe?.invoke()
+                    true
+                }else{
+                    false
+                }
+            }
+        )
+        SwipeToDismissBox(
+            state = swipeState,
+            backgroundContent = {},
+        ) {
+            MainBody(
+                trendingNews = trendingNews,
+                categoryTxt = categoryTxt,
+                timeTxt = timeTxt,
+                onMoreClick = { onMoreClick() },
+                onLongPress = onLongPress,
+                onItemClick = onItemClick
             )
         }
+    }
+    else{
+        MainBody(
+            trendingNews = trendingNews,
+            categoryTxt = categoryTxt,
+            timeTxt = timeTxt,
+            onMoreClick = { onMoreClick() },
+            onLongPress = onLongPress,
+            onItemClick = onItemClick
+        )
+    }
+}
+
+@Composable
+fun MainBody(trendingNews: News?, categoryTxt: String, timeTxt:String?, onMoreClick: ()-> Unit, onLongPress:(Offset)->Unit,onItemClick: (Offset)->Unit ){
+    ConstraintLayout (
+        modifier = Modifier
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = onLongPress,
+                    onTap = onItemClick
+                )
+            }
     ){
 
         val (image,category,title,source,timeIcon,time,more) = createRefs()

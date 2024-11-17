@@ -14,7 +14,6 @@ var phoneErrorText = ""
 
 // email validation function
 fun emailValidation(email:String): Boolean{
-
     val isError = if(email.isEmpty()){
         emailErrorText =  "Email is empty"
         true
@@ -31,7 +30,6 @@ fun emailValidation(email:String): Boolean{
 
 // password validation function
 fun passwordValidation(password:String): Boolean{
-
     val isError = if(password.isEmpty()){
         passwordErrorText = "Password is empty"
         true
@@ -48,7 +46,6 @@ fun passwordValidation(password:String): Boolean{
 
 // name validation function
 fun nameValidation(name:String): Boolean{
-
     val isError = if(name.isEmpty()){
         nameErrorText = "Your name is empty"
         true
@@ -61,7 +58,6 @@ fun nameValidation(name:String): Boolean{
 
 // phone number validation function
 fun phoneValidation(phone:String): Boolean{
-
     val isError = if(phone.isEmpty()){
         phoneErrorText = "Phone is empty"
         true

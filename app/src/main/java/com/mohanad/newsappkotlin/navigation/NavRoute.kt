@@ -24,9 +24,4 @@ sealed class NavRoute (val route:String){
     data object FillProfile : NavRoute("fill profile")
     // HomeScreen Route
     data object Home: NavRoute("home")
-//    // Bottom Navigation Bar Routes
-//    data object HomeItem: NavRoute("home item")
-//    data object ExploreItem: NavRoute("explore item")
-//    data object BookmarkItem: NavRoute("bookmark item")
-//    data object ProfileItem: NavRoute("profile item")
 }

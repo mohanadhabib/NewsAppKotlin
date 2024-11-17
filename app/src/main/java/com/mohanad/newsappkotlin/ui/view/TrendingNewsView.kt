@@ -3,8 +3,10 @@ package com.mohanad.newsappkotlin.ui.view
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.mohanad.newsappkotlin.R
+import com.mohanad.newsappkotlin.navigation.BottomNavRoute
 import com.mohanad.newsappkotlin.ui.view.composable.LabelText
 import com.mohanad.newsappkotlin.ui.view.composable.TrendingNewsTile
 import com.mohanad.newsappkotlin.ui.viewmodel.BottomHomeViewModel
@@ -31,6 +35,7 @@ fun TrendingNewsView(navController: NavHostController,viewModel: BottomHomeViewM
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ){
+        val gson = Gson()
         val context = LocalContext.current
         val savedNews by viewModel.getSavedNews(context).observeAsState()
         val latestNews by viewModel.getLatestNews().observeAsState()
@@ -59,15 +64,17 @@ fun TrendingNewsView(navController: NavHostController,viewModel: BottomHomeViewM
             })
 
         LazyColumn (
-            modifier = Modifier.fillMaxHeight().constrainAs(trendingList){
-                top.linkTo(trendingTxt.bottom, margin = 10.dp)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
+            modifier = Modifier
+                .fillMaxHeight()
+                .constrainAs(trendingList) {
+                    top.linkTo(trendingTxt.bottom, margin = 10.dp)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
 
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            }
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
         ){
             items(latestNews?.articles ?: emptyList()){ item ->
                 TrendingNewsTile(
@@ -84,10 +91,19 @@ fun TrendingNewsView(navController: NavHostController,viewModel: BottomHomeViewM
                             Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
                         }
                     },
-                    onMoreClick = { /*TODO*/ }) {
+                    onMoreClick = {
+                        val time = viewModel.getTimeElapsed(item.publishedAt).value ?: ""
+                        val news = gson.toJson(item.copy(category = viewModel.category))
+                        navController.currentBackStackEntry?.savedStateHandle?.set("news",news)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("time",time)
+                        navController.navigate(BottomNavRoute.DetailsView.route)
+                    }) {
+                    val url = item.url
+                    navController.currentBackStackEntry?.savedStateHandle?.set("url",url)
+                    navController.navigate(BottomNavRoute.WebView.route)
                 }
+                Spacer(modifier = Modifier.height(25.dp))
             }
         }
     }
-
 }

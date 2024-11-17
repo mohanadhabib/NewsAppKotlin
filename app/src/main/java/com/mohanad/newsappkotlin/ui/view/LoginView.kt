@@ -3,12 +3,12 @@ package com.mohanad.newsappkotlin.ui.view
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Column
 import com.mohanad.newsappkotlin.R
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,246 +46,246 @@ import com.mohanad.newsappkotlin.ui.viewmodel.LoginViewModel
 // Login Screen
 @Composable
 fun LoginView(viewModel: LoginViewModel,navController: NavHostController){
-    ConstraintLayout (
-        modifier = Modifier
-            .fillMaxSize()
-            .scrollable(
-                state = rememberScrollState(),
-                orientation = Orientation.Vertical
-            )
-            .padding(horizontal = 20.dp, vertical = 35.dp)
+
+    Column (
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ){
-
-        val context = LocalContext.current.applicationContext
-
-        val (
-            text1,text2,text3,emailLabel,
-            emailTextField,passwordLabel,passwordTextField,
-            rememberMe,loginBtn,continueTxt,
-            googleBtn,facebookBtn,signUpTxt,signUpBtn
-        ) = createRefs()
-
-        val guideline0 = createGuidelineFromTop(0.035f)
-        val guideline1 = createGuidelineFromTop(0.25f)
-
-        val vGuidLine = createGuidelineFromStart(0.15f)
-
-        createHorizontalChain(googleBtn,facebookBtn, chainStyle = ChainStyle.SpreadInside)
-
-        val emailError = emailErrorText
-        val passwordError = passwordErrorText
-
-        WelcomeText(
-            text = "Hello",
-            color = Color.Black,
-            modifier = Modifier.constrainAs(text1){
-                top.linkTo(guideline0)
-                start.linkTo(parent.start)
-            }
-        )
-
-        WelcomeText(
-            text = "Again!",
-            color = mainBlue,
-            modifier = Modifier.constrainAs(text2){
-                top.linkTo(text1.bottom, margin = 10.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        OnBoardingText(
-            text = "Welcome back you’ve\nbeen missed",
-            modifier = Modifier.constrainAs(text3){
-                top.linkTo(text2.bottom, margin = 20.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        TextFieldLabel(
-            text = "Email",
-            modifier = Modifier.constrainAs(emailLabel){
-                top.linkTo(guideline1)
-            }
-        )
-
-        UserTextField(
-            isError = viewModel.isEmailError,
-            errorText = emailError,
-            visualTransformation = VisualTransformation.None,
-            keyboardType = KeyboardType.Email,
-            action = ImeAction.Next,
-            value = viewModel.email,
-            onValueChange = {
-                viewModel.email = it
-                viewModel.isEmailError = emailValidation(viewModel.email)
-            },
-            placeholder = null,
-            modifier = Modifier.constrainAs(emailTextField){
-                top.linkTo(emailLabel.bottom , margin = 10.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            },
-            trailing = null
-        )
-
-        TextFieldLabel(
-            text = "Password",
-            modifier = Modifier.constrainAs(passwordLabel){
-                top.linkTo(emailTextField.bottom , margin = 20.dp)
-            }
-        )
-
-        UserTextField(
-            isError = viewModel.isPasswordError,
-            errorText = passwordError,
-            visualTransformation = viewModel.passwordHide,
-            keyboardType = KeyboardType.Password,
-            action = ImeAction.Done,
-            value = viewModel.password,
-            onValueChange = {
-                viewModel.password = it
-                viewModel.isPasswordError = passwordValidation(viewModel.password)
-            },
-            placeholder = null,
-            modifier = Modifier.constrainAs(passwordTextField){
-                top.linkTo(passwordLabel.bottom , margin = 10.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            },
+        ConstraintLayout (
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 35.dp)
         ){
-            Image(
-                painter = painterResource(R.drawable.ic_password_action),
-                contentDescription = "Show and Hide Password",
-                modifier = Modifier.clickable{
-                    viewModel.isPasswordShown = !viewModel.isPasswordShown
 
-                    viewModel.passwordHide = if(viewModel.isPasswordShown){
-                        VisualTransformation.None
-                    }else{
-                        PasswordVisualTransformation()
-                    }
+            val context = LocalContext.current.applicationContext
+
+            val (
+                text1,text2,text3,emailLabel,
+                emailTextField,passwordLabel,passwordTextField,
+                rememberMe,loginBtn,continueTxt,
+                googleBtn,facebookBtn,signUpTxt,signUpBtn
+            ) = createRefs()
+
+            val guideline0 = createGuidelineFromTop(0.035f)
+            val guideline1 = createGuidelineFromTop(0.270f)
+
+            val vGuidLine = createGuidelineFromStart(0.15f)
+
+            createHorizontalChain(googleBtn,facebookBtn, chainStyle = ChainStyle.SpreadInside)
+
+            val emailError = emailErrorText
+            val passwordError = passwordErrorText
+
+            WelcomeText(
+                text = "Hello",
+                color = Color.Black,
+                modifier = Modifier.constrainAs(text1){
+                    top.linkTo(guideline0)
+                    start.linkTo(parent.start)
                 }
             )
-        }
 
-        RememberMeRow(
-            checked = viewModel.isChecked,
-            modifier = Modifier.constrainAs(rememberMe){
-                top.linkTo(passwordTextField.bottom, margin = 20.dp)
-                start.linkTo(parent.start)
-            }
-        ) {
-            viewModel.isChecked = it
-        }
+            WelcomeText(
+                text = "Again!",
+                color = mainBlue,
+                modifier = Modifier.constrainAs(text2){
+                    top.linkTo(text1.bottom, margin = 10.dp)
+                    start.linkTo(parent.start)
+                }
+            )
 
-        OnBoardingNextButton(
-            text = "Login",
-            modifier = Modifier.constrainAs(loginBtn){
-                top.linkTo(rememberMe.bottom , margin = 20.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }
-        ) {
-            viewModel.isEmailError = emailValidation(viewModel.email)
+            OnBoardingText(
+                text = "Welcome back you’ve\nbeen missed",
+                modifier = Modifier.constrainAs(text3){
+                    top.linkTo(text2.bottom, margin = 20.dp)
+                    start.linkTo(parent.start)
+                }
+            )
 
-            viewModel.isPasswordError = passwordValidation(viewModel.password)
-            if(!viewModel.isEmailError && !viewModel.isPasswordError){
-                viewModel.login(
-                    email = viewModel.email,
-                    password = viewModel.password,
-                    onSuccess = {
-                        Toast.makeText(context,"Login Successfully!!", Toast.LENGTH_SHORT).show()
-                        navController.navigate(NavRoute.Home.route){
-                            popUpTo(NavRoute.Login.route){
-                                inclusive = true
-                            }
+            TextFieldLabel(
+                text = "Email",
+                modifier = Modifier.constrainAs(emailLabel){
+                    top.linkTo(guideline1)
+                }
+            )
+
+            UserTextField(
+                isError = viewModel.isEmailError,
+                errorText = emailError,
+                visualTransformation = VisualTransformation.None,
+                keyboardType = KeyboardType.Email,
+                action = ImeAction.Next,
+                value = viewModel.email,
+                onValueChange = {
+                    viewModel.email = it
+                    viewModel.isEmailError = emailValidation(viewModel.email)
+                },
+                placeholder = null,
+                modifier = Modifier.constrainAs(emailTextField){
+                    top.linkTo(emailLabel.bottom , margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                },
+                trailing = null
+            )
+
+            TextFieldLabel(
+                text = "Password",
+                modifier = Modifier.constrainAs(passwordLabel){
+                    top.linkTo(emailTextField.bottom , margin = 20.dp)
+                }
+            )
+
+            UserTextField(
+                isError = viewModel.isPasswordError,
+                errorText = passwordError,
+                visualTransformation = viewModel.passwordHide,
+                keyboardType = KeyboardType.Password,
+                action = ImeAction.Done,
+                value = viewModel.password,
+                onValueChange = {
+                    viewModel.password = it
+                    viewModel.isPasswordError = passwordValidation(viewModel.password)
+                },
+                placeholder = null,
+                modifier = Modifier.constrainAs(passwordTextField){
+                    top.linkTo(passwordLabel.bottom , margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                },
+            ){
+                Image(
+                    painter = painterResource(R.drawable.ic_password_action),
+                    contentDescription = "Show and Hide Password",
+                    modifier = Modifier.clickable{
+                        viewModel.isPasswordShown = !viewModel.isPasswordShown
+
+                        viewModel.passwordHide = if(viewModel.isPasswordShown){
+                            VisualTransformation.None
+                        }else{
+                            PasswordVisualTransformation()
                         }
-                        if(viewModel.isChecked){
-                            viewModel.storeId(it.user?.uid!!)
-                        }
-                    },
-                    onFailure = {
-                        Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
-                    },
-                    onExceptionFound = {
-                        Toast.makeText(context,it.localizedMessage,Toast.LENGTH_LONG).show()
                     }
                 )
             }
-        }
 
-        Text(
-            text = "or continue with",
-            fontSize = 16.sp,
-            color = mainBlackGrey,
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier.constrainAs(continueTxt){
-                top.linkTo(loginBtn.bottom , margin = 15.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
+            RememberMeRow(
+                checked = viewModel.isChecked,
+                modifier = Modifier.constrainAs(rememberMe){
+                    top.linkTo(passwordTextField.bottom, margin = 20.dp)
+                    start.linkTo(parent.start)
+                }
+            ) {
+                viewModel.isChecked = it
             }
-        )
 
-        SocialMediaButton(
-            text = "Facebook",
-            contentDescription = "Facebook login",
-            painter = painterResource(R.drawable.ic_facebook),
-            modifier = Modifier.constrainAs(facebookBtn){
-                top.linkTo(continueTxt.bottom , margin = 15.dp)
-                start.linkTo(parent.start)
-                width = Dimension.wrapContent
-            },
-            onClick = {
-                TODO()
+            OnBoardingNextButton(
+                text = "Login",
+                modifier = Modifier.constrainAs(loginBtn){
+                    top.linkTo(rememberMe.bottom , margin = 20.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                }
+            ) {
+                viewModel.isEmailError = emailValidation(viewModel.email)
+
+                viewModel.isPasswordError = passwordValidation(viewModel.password)
+                if(!viewModel.isEmailError && !viewModel.isPasswordError){
+                    viewModel.login(
+                        email = viewModel.email,
+                        password = viewModel.password,
+                        onSuccess = {
+                            Toast.makeText(context,"Login Successfully!!", Toast.LENGTH_SHORT).show()
+                            navController.navigate(NavRoute.Home.route){
+                                popUpTo(NavRoute.Login.route){
+                                    inclusive = true
+                                }
+                            }
+                            if(viewModel.isChecked){
+                                viewModel.storeId(it.user?.uid!!)
+                            }
+                        },
+                        onFailure = {
+                            Toast.makeText(context,it.localizedMessage, Toast.LENGTH_LONG).show()
+                        },
+                        onExceptionFound = {
+                            Toast.makeText(context,it.localizedMessage,Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
             }
-        )
 
-        SocialMediaButton(
-            text = "Google",
-            contentDescription = "google login",
-            painter = painterResource(R.drawable.ic_google),
-            modifier = Modifier.constrainAs(googleBtn){
-                top.linkTo(continueTxt.bottom , margin = 20.dp)
-                end.linkTo(parent.end)
-                width = Dimension.wrapContent
-            },
-            onClick = {
-                TODO()
-            }
-        )
-
-        Text(
-            text = "don’t have an account ?",
-            fontSize = 16.sp,
-            color = mainBlackGrey,
-            modifier = Modifier.constrainAs(signUpTxt){
-                top.linkTo(googleBtn.bottom, margin = 15.dp)
-                start.linkTo(vGuidLine)
-
-            }
-        )
-
-        TextButton(
-            modifier = Modifier
-                .padding(0.dp)
-                .constrainAs(signUpBtn) {
-                    top.linkTo(signUpTxt.top)
-                    bottom.linkTo(signUpTxt.bottom)
-                    start.linkTo(signUpTxt.end)
-                },
-            onClick = {
-                navController.navigate(NavRoute.SignUp.route)
-            }
-        ) {
             Text(
-                text = "Sign Up",
+                text = "or continue with",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = mainBlue
+                color = mainBlackGrey,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.constrainAs(continueTxt){
+                    top.linkTo(loginBtn.bottom , margin = 15.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
             )
+
+            SocialMediaButton(
+                text = "Facebook",
+                contentDescription = "Facebook login",
+                painter = painterResource(R.drawable.ic_facebook),
+                modifier = Modifier.constrainAs(facebookBtn){
+                    top.linkTo(continueTxt.bottom , margin = 15.dp)
+                    start.linkTo(parent.start)
+                    width = Dimension.wrapContent
+                },
+                onClick = {
+                    TODO()
+                }
+            )
+
+            SocialMediaButton(
+                text = "Google",
+                contentDescription = "google login",
+                painter = painterResource(R.drawable.ic_google),
+                modifier = Modifier.constrainAs(googleBtn){
+                    top.linkTo(continueTxt.bottom , margin = 20.dp)
+                    end.linkTo(parent.end)
+                    width = Dimension.wrapContent
+                },
+                onClick = {
+                    TODO()
+                }
+            )
+
+            Text(
+                text = "don’t have an account ?",
+                fontSize = 16.sp,
+                color = mainBlackGrey,
+                modifier = Modifier.constrainAs(signUpTxt){
+                    top.linkTo(googleBtn.bottom, margin = 15.dp)
+                    start.linkTo(vGuidLine)
+
+                }
+            )
+
+            TextButton(
+                modifier = Modifier
+                    .padding(0.dp)
+                    .constrainAs(signUpBtn) {
+                        top.linkTo(signUpTxt.top)
+                        bottom.linkTo(signUpTxt.bottom)
+                        start.linkTo(signUpTxt.end)
+                    },
+                onClick = {
+                    navController.navigate(NavRoute.SignUp.route)
+                }
+            ) {
+                Text(
+                    text = "Sign Up",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = mainBlue
+                )
+            }
         }
     }
 }

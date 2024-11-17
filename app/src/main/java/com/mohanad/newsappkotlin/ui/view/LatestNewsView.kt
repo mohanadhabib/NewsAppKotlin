@@ -1,7 +1,5 @@
 package com.mohanad.newsappkotlin.ui.view
 
-import android.util.Log
-import android.webkit.WebView
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,19 +16,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.mohanad.newsappkotlin.R
+import com.mohanad.newsappkotlin.navigation.BottomNavRoute
 import com.mohanad.newsappkotlin.ui.view.composable.MainRow
 import com.mohanad.newsappkotlin.ui.view.composable.NewsCategoryTab
 import com.mohanad.newsappkotlin.ui.view.composable.NewsTile
 import com.mohanad.newsappkotlin.ui.viewmodel.BottomHomeViewModel
 
 @Composable
-fun LatestNewsView(viewModel: BottomHomeViewModel){
+fun LatestNewsView(viewModel: BottomHomeViewModel , navController:NavHostController){
     ConstraintLayout (
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp , end = 20.dp , top = 20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ){
+        val gson = Gson()
         val context = LocalContext.current
         val savedNews by viewModel.getSavedNews(context).observeAsState()
         val newsByCategory by viewModel.getNewsByCategory(viewModel.category).observeAsState()
@@ -70,15 +72,17 @@ fun LatestNewsView(viewModel: BottomHomeViewModel){
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxHeight().constrainAs(newsScreen){
-                top.linkTo(newsTab.bottom , margin = 10.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom )
+            modifier = Modifier
+                .fillMaxHeight()
+                .constrainAs(newsScreen) {
+                    top.linkTo(newsTab.bottom, margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
 
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            }
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
         ) {
             items(newsByCategory?.articles ?: emptyList()){ item ->
                 NewsTile(
@@ -95,9 +99,18 @@ fun LatestNewsView(viewModel: BottomHomeViewModel){
                             Toast.makeText(context,"Article is already saved",Toast.LENGTH_SHORT).show()
                         }
                     },
-                    onMoreClick = { TODO() }) {
-                    Log.e("TAGG",item.url)
-                    WebView(context).loadUrl(item.url)
+                    isSwappable = false,
+                    onSwipe = null,
+                    onMoreClick = {
+                        val time = viewModel.getTimeElapsed(item.publishedAt).value ?: ""
+                        val news = gson.toJson(item.copy(category = viewModel.category))
+                        navController.currentBackStackEntry?.savedStateHandle?.set("news",news)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("time",time)
+                        navController.navigate(BottomNavRoute.DetailsView.route)
+                    }) {
+                    val url = item.url
+                    navController.currentBackStackEntry?.savedStateHandle?.set("url",url)
+                    navController.navigate(BottomNavRoute.WebView.route)
                 }
             }
         }

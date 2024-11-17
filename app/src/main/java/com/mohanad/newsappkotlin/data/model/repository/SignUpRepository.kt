@@ -8,14 +8,11 @@ import com.mohanad.newsappkotlin.data.datasource.sharedpreferences.UserSharedPre
 import com.mohanad.newsappkotlin.data.model.User
 
 class SignUpRepository (private val context: Context){
-
-    // data source instances
+    // Data source instances
     private val firebase = SignUpFirebase()
     private val sharedPreferences = UserSharedPreferences()
-
     // The stored userId in shared preferences
     val storedId = MutableLiveData<String>(sharedPreferences.getStoredId(context))
-
     // Signup and authenticating user from firebase
     fun signUp(email:String , password:String , onSuccess:(AuthResult)-> Unit , onFailure:(Exception)-> Unit,onExceptionFound:(Exception)->Unit){
         firebase.signUp(
@@ -26,7 +23,6 @@ class SignUpRepository (private val context: Context){
              onExceptionFound = onExceptionFound
         )
     }
-
     // Storing user data into firebase firestore
     fun createUser(user: User , onSuccess: (Void?) -> Unit , onFailure: (Exception) -> Unit,onExceptionFound:(Exception)->Unit){
         firebase.createUser(
@@ -36,7 +32,6 @@ class SignUpRepository (private val context: Context){
             onExceptionFound = onExceptionFound
         )
     }
-
     // Storing the userId in shared preferences
     fun storeId(id:String){
         sharedPreferences.storeId(
@@ -44,7 +39,6 @@ class SignUpRepository (private val context: Context){
             id = id
         )
     }
-
 }
 
 
