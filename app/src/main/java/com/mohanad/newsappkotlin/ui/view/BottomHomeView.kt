@@ -58,7 +58,7 @@ fun BottomHomeView(viewModel: BottomHomeViewModel , navController: NavHostContro
             val (logoImg, searchBar, trendingRow, trendingTile, allRow, newsTab, newsScreen) = createRefs()
 
             val guideLine0 = createGuidelineFromTop(0.6f)
-            val guideLine1 = createGuidelineFromTop(0.65f)
+            val guideLine1 = createGuidelineFromTop(0.675f)
 
 
             Image(

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
+// The tab view of categories list
 @Composable
 fun NewsCategoryTab(modifier: Modifier ,selectedIndex:Int ,onClick:(Int,String)->Unit){
 

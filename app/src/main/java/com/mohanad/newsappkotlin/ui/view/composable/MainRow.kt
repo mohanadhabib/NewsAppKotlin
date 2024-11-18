@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
+// The label of news category and see all button together
 @Composable
 fun MainRow(modifier: Modifier , text:String , seeAllButton:Boolean , onClick:()->Unit ){
     Row (

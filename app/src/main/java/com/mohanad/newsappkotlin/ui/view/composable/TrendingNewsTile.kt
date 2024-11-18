@@ -25,7 +25,7 @@ import com.mohanad.newsappkotlin.data.model.News
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
-
+// The news tile used in trending screen
 @Composable
 fun TrendingNewsTile(trendingNews:News? , timeTxt:String? , modifier: Modifier , onMoreClick: ()-> Unit ,onLongPress:(Offset)->Unit ,  onItemClick: (Offset)->Unit ){
 

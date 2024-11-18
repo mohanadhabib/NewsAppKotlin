@@ -16,6 +16,7 @@ import com.mohanad.newsappkotlin.navigation.BottomNavRoute
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainBlue
 
+// The bottom navigation bar of main home screen
 @Composable
 fun BottomNavigationBar(navController: NavHostController , list:List<BottomNavRoute>){
     val backStackEntry = navController.currentBackStackEntryAsState()

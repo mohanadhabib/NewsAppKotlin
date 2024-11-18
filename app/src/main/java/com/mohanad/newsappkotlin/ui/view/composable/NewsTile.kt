@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxDefaults
 import androidx.compose.material3.SwipeToDismissBoxState
@@ -31,7 +30,7 @@ import com.mohanad.newsappkotlin.data.model.News
 import com.mohanad.newsappkotlin.ui.theme.mainBlackGrey
 import com.mohanad.newsappkotlin.ui.theme.mainGrey
 
-@OptIn(ExperimentalMaterial3Api::class)
+// The main news tile in home , bookmarks and profile screens
 @Composable
 fun NewsTile(isSwappable:Boolean, trendingNews: News?, categoryTxt: String, timeTxt:String?, onMoreClick: ()-> Unit, onLongPress:(Offset)->Unit, onSwipe:(() -> Unit)?,onItemClick: (Offset)->Unit ){
 
